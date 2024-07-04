@@ -1,8 +1,48 @@
-import React, { useState } from 'react'
-import { appointments, todaysAppointments } from "../../../dummyData"
+import React, { useEffect, useState } from 'react'
+// import { todaysAppointments } from "../../../dummyData"
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 const AllAppointmentsPage = () => {
   const [showTodaysApp, setShowTodaysApp] = useState(true);
   const [showAllApp, setShowAllApp] = useState(false);
+  const queryClient = useQueryClient();
+  const { data: appointments, isSuccess: allAppLoading, refetch, isRefetchError: allReftchError } = useQuery({
+    queryKey: ['allAppointments'],
+    queryFn: async () => {
+      try {
+        const res = await axios.get('/api/v1/users/appointments');
+        return res.data.data;
+      } catch (error) {
+        toast.error("unable to fetch Todays Appointments")
+        return [];
+      }
+    }
+  })
+  const { data: todaysAppointments, isSuccess: dailyAppLoading, refetch: todayReftech, isRefetchError: todaysRefetchError } = useQuery({
+    queryKey: ['todaysAppointments'],
+    queryFn: async () => {
+      try {
+        const res = await axios.get('/api/v1/users/dailyAppointments');
+        return res.data.data;
+      } catch (error) {
+        toast.error("unable to fetch Todays Appointments")
+        return [];
+      }
+    }
+  })
+
+
+  useEffect(() => {
+    refetch();
+    todayReftech();
+    if (todaysRefetchError || allReftchError) {
+      toast.error("Unable to get appointments");
+      return;
+    }
+    if (!dailyAppLoading || !allAppLoading) queryClient.invalidateQueries({ queryKey: ['authUser'] })
+  }, [])
+
   return (
     <div className='md:w-[70%]  w-[100%] px-5 md:px-0 mx-auto mt-7 font-semibold' data-theme="cupcake">
       <h3 className='my-4 text-2xl font-bold text-neutral-content text-center'>Appointment Details</h3>
@@ -32,15 +72,15 @@ const AllAppointmentsPage = () => {
               <tbody>
                 {/* row 1 */}
                 {
-                  todaysAppointments.map((appointment, index) => (
+                  todaysAppointments && todaysAppointments.map((appointment, index) => (
                     <tr key={index}>
                       <th key={index + 1}>{index + 1}</th>
                       <td key={index + 2}>{appointment.patient_name}</td>
                       <td key={index + 3}>{appointment.mobile_no}</td>
                       <td key={index + 4} className='hidden md:block'>{appointment.age}</td>
                       <td key={index + 5} className='hidden md:block'>{appointment.gender}</td>
-                      <td key={index + 6}>{appointment.date_of_app}</td>
-                      <td key={index + 7}>{appointment.time_of_app}</td>
+                      <td key={index + 6}>{appointment.date_of_app.substring(0, 10)}</td>
+                      <td key={index + 7}>{Number(appointment.time_of_app.substring(0, 2)) > 12 ? appointment.time_of_app.substring(0, 10) + " PM" : appointment.time_of_app.substring(0, 10) + " AM"}</td>
                     </tr>
                   ))
                 }
@@ -77,19 +117,18 @@ const AllAppointmentsPage = () => {
               <tbody>
                 {/* row 1 */}
                 {
-                  appointments.map((appointment, index) => (
+                  appointments && appointments?.map((appointment, index) => (
                     <tr className="" key={index}>
                       <th key={index + 1}>{index + 1}</th>
                       <td key={index + 2}>{appointment.patient_name}</td>
                       <td key={index + 3}>{appointment.mobile_no}</td>
                       <td key={index + 4} className='hidden md:block'>{appointment.age}</td>
                       <td key={index + 5} className='hidden md:block'>{appointment.gender}</td>
-                      <td key={index + 6}>{appointment.date_of_app}</td>
-                      <td key={index + 7}>{appointment.time_of_app}</td>
+                      <td key={index + 6}>{appointment.date_of_app.substring(0, 10)}</td>
+                      <td key={index + 7}>{Number(appointment.time_of_app.substring(0, 2)) > 12 ? appointment.time_of_app.substring(0, 10) + " PM" : appointment.time_of_app.substring(0, 10) + " AM"}</td>
                     </tr>
                   ))
                 }
-                {/* row 2 */}
 
               </tbody>
             </table>
