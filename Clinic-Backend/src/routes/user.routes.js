@@ -43,4 +43,5 @@ router.route("/dailyAppointments").get(verifyJWT, getDailyAppointments);
 
 router.route("/refreshAccessToken").post(verifyRefreshToken, refreshAccessToken);
 
+
 export default router;

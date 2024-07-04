@@ -1,23 +1,30 @@
+// Dependency
 import jwt from "jsonwebtoken"
-import { ApiError } from "../utils/ApiError.js"
-import { User } from "../models/user.model.js"
-import { asyncHandler } from "../utils/asyncHandler.js"
 
-const verifyJWT = asyncHandler( async (req, res, next) => {
+// Model
+import { User } from "../models/user.model.js"
+
+export const verifyJWT = async (req, res, next) => {
     try {
         const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "");
-        if(!token) throw new ApiError(401, "Unauthorized request")
+        if (!token) {
+            return res.status(401).json({ error: "Unauthorized request" });
+        }
 
-        const decodedUser = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+        const decodedInfo = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        if (!decodedInfo) {
+            return res.status(401).json({ error: "Invalid token" });
+        }
 
-        const user = await User.findById(decodedUser?._id).select("-password -refreshToken")
+        const currentUser = await User.findById(decodedInfo?._id).select("-password -refreshToken")
 
-        if(!user) throw new ApiError(401, "Invalid Access Token");
-        req.user = user;
+        if (!currentUser) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        req.user = currentUser;
         next();
     } catch (error) {
-        throw new ApiError(401, error?.message || "Invalid access token");
+        console.log("Error in verifyUser middleware", error.message);
+        return res.status(500).json({ error: "Internal server error" });
     }
-} )
-
-export { verifyJWT }
+}

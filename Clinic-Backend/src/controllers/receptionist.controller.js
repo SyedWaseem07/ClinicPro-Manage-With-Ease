@@ -40,6 +40,7 @@ const addAppointment = asyncHandler(async (req, res) => {
 // Post :- /api/v1/users/receptionist/addPatientDetails
 const addNewPatientDetails = asyncHandler(async (req, res) => {
     let { patient_name, mobile_no, age, weight, gender, symptoms, last_visited } = req.body;
+    console.log(patient_name, mobile_no, age, weight, gender, symptoms, last_visited)
     if (!patient_name || !mobile_no || !age || !weight || !gender || !symptoms || !last_visited)
         throw new ApiError(400, "All feilds are required");
 
@@ -143,8 +144,7 @@ const updateExistingPatientDetails = asyncHandler(async (req, res) => {
     let { patient_name, mobile_no, age, weight, symptoms, last_visited } = req.body;
     if (!patient_name || !mobile_no || !age || !weight || !symptoms || !last_visited)
         throw new ApiError(400, "All feilds are required");
-
-    last_visited += "T00:00:00.000Z";
+    console.log("entered controller");
     last_visited = new Date(last_visited);
 
     const patientDetails = await Visited_Patient_Details.findOneAndUpdate(
@@ -274,7 +274,7 @@ const addReport = asyncHandler(async (req, res) => {
     const { patient_name, report_name } = req.body;
     if (!patient_name || !report_name)
         throw new ApiError(400, "All feilds are required");
-
+    console.log(req.files);
     if (!req.file?.path) throw new ApiError(400, "Report file required");
 
     const reportFile = await uploadOnCloudinary(req.file?.path);
