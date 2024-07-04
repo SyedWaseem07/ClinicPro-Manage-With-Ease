@@ -1,13 +1,51 @@
-import React, { useState } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 
 const ChangePassword = () => {
   const [formData, setFormData] = useState({
-    password: "",
-    confirmPassword: "",
+    oldPassword: "",
+    newPassword: "",
   })
-  const handleSubmit = (e) => { }
+  const queryClient = useQueryClient();
+  const { mutate, isPending } = useMutation({
+    mutationFn: async () => {
+      try {
+        const res = await axios.post('/api/v1/users/changePassword', { ...formData });
+        return res.data.data;
+      } catch (error) {
+        const index = error.response.data.indexOf("<pre>")
+        const Lastindex = error.response.data.indexOf("<br>")
+        const errMsg = error.response.data.substring(index + 5, Lastindex);
+        throw new Error(errMsg);
+      }
+    },
+    onSuccess: () => {
+      toast.success("Password changed successfully");
+      queryClient.invalidateQueries({ queryKey: ['authUser'] });
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    }
+  })
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ['authUser'] });
+  }, [])
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\W).{6,}$/;
+
+    if (!passwordRegex.test(formData.newPassword)) {
+      toast.error("New Password must be at least 6 characters, with at least one uppercase letter and one special character")
+      return;
+    }
+
+    mutate();
+  }
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: [e.target.value] })
+    setFormData({ ...formData, [e.target.name]: e.target.value })
   }
   return (
     <div className='lg:w-[70%] mx-auto px-5 md:px-0 w-[100%] mt-7 font-semibold'>
@@ -17,8 +55,8 @@ const ChangePassword = () => {
           <input
             type='password'
             className='grow'
-            placeholder='Password'
-            name='password'
+            placeholder='old Password'
+            name='oldPassword'
             value={formData.password}
             onChange={handleChange}
           />
@@ -28,13 +66,13 @@ const ChangePassword = () => {
           <input
             type='password'
             className='grow'
-            placeholder='confirm Password'
-            name='confpassword'
-            value={formData.confirmPassword}
+            placeholder='new Password'
+            name='newPassword'
+            value={formData.newPassword}
             onChange={handleChange}
           />
         </label>
-        <button className='btn rounded-full btn-primary text-primary-content font-semibold text-[1.2rem]'>Change</button>
+        <button className='btn rounded-full btn-primary text-primary-content font-semibold text-[1.2rem]' disabled={isPending}>Change{isPending && <span className="loading loading-spinner loading-sm text-primary-content"></span>}</button>
       </form>
     </div>
   )
