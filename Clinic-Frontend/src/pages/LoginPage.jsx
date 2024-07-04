@@ -1,11 +1,37 @@
 import React, { useState } from 'react'
 import clinic from "../assets/clinic.png"
-import { } from "react"
+import { useQueryClient, useMutation } from "@tanstack/react-query"
+import { toast } from "react-hot-toast"
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 const LoginPage = () => {
   const [formData, setFormData] = useState({
     "username": "",
     "password": "",
     "role": ""
+  })
+  const queryClient = useQueryClient();
+  const navigator = useNavigate();
+  const { mutate, isPending, isLoading } = useMutation({
+    mutationFn: async ({ username, password, role }) => {
+      try {
+        const res = await axios.post("/api/v1/users/login", { username, password, role });
+        return res;
+      } catch (error) {
+        const index = error.response.data.indexOf("<pre>")
+        const Lastindex = error.response.data.indexOf("<br>")
+        const errMsg = error.response.data.substring(index + 5, Lastindex);
+        throw new Error(errMsg);
+      }
+    },
+    onSuccess: (data) => {
+      console.log("Login success");
+      toast.success("Login successful")
+      queryClient.invalidateQueries({ queryKey: ['authUser'] })
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    }
   })
 
   const handleChange = (e) => {
@@ -14,7 +40,7 @@ const LoginPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
+    mutate(formData);
   }
   return (
     <div className='w-full max-w-[1240px] mx-auto'>
@@ -62,7 +88,7 @@ const LoginPage = () => {
             <span>Receptionist</span>
           </div>
 
-          <button className='btn rounded-full btn-primary text-primary-content font-semibold text-[1.2rem]' >Login</button>
+          <button className='btn rounded-full btn-primary text-primary-content font-semibold text-[1.2rem]' disabled={isPending}>Login{isPending && <span className="loading loading-spinner loading-sm text-primary-content"></span>}</button>
         </form>
       </div>
     </div>
