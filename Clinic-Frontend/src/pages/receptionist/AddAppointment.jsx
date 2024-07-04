@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { FaPlusCircle } from "react-icons/fa";
-
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import axios from "axios"
+import toast from "react-hot-toast"
+import validateInput from "../../hooks/validateInput"
 const AddAppointment = () => {
   const [formData, setFormData] = useState({
     "patient_name": "",
@@ -10,9 +13,93 @@ const AddAppointment = () => {
     "date_of_app": "",
     "time_of_app": ""
   })
+  const queryClient = useQueryClient();
+  const { mutate, isLoading } = useMutation({
+    mutationFn: async (data) => {
+      try {
+        const res = await axios.post("/api/v1/users/receptionist/addAppointment", data);
+        return res.data.data;
+      } catch (error) {
+        const index = error.response.data.indexOf("<pre>")
+        const Lastindex = error.response.data.indexOf("<br>")
+        const errMsg = error.response.data.substring(index + 5, Lastindex);
+        throw new Error(errMsg);
+      }
+    },
+    onSuccess: () => {
+      toast.success("Appointment added successfully");
+      queryClient.invalidateQueries({ queryKey: ['authUser'] });
+      queryClient.invalidateQueries({ queryKey: ['allAppointments'] });
+      queryClient.invalidateQueries({ queryKey: ['todaysAppointments'] });
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    }
+  })
+  function compareDates(dateString) {
+    // Parse the input date string into a Date object
+    const inputDate = new Date(dateString);
+
+    // Get the current date and reset the time to zero
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+
+    // Reset the time of inputDate to zero
+    inputDate.setHours(0, 0, 0, 0);
+
+    // Compare the dates
+    if (inputDate.getTime() === currentDate.getTime()) {
+      return 0; // Dates are the same
+    } else if (inputDate.getTime() > currentDate.getTime()) {
+      return 1; // inputDate is after currentDate
+    } else {
+      return -1; // inputDate is before currentDate
+    }
+  }
+  function checkTimeInRange(timeString) {
+    const [hours, minutes] = timeString.split(':').map(Number);
+
+    // Check if provided time is between 10:00 to 14:00 or 18:00 to 23:00
+    if ((hours >= 10 && hours < 14) || (hours >= 18 && hours < 23)) {
+      return 1; // Provided time is within the specified ranges
+    } else if (hours === 14 && minutes === 0) {
+      // Special case to consider exactly 14:00 (2 PM)
+      return 0;
+    } else {
+      return 0; // Provided time is outside the specified ranges
+    }
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
+    if (validateInput(formData.patient_name, formData.mobile_no, formData.age) !== 0) {
+      if (validateInput(formData.patient_name, formData.mobile_no, formData.age) === 1)
+        toast.error("Enter valid name");
+      if (validateInput(formData.patient_name, formData.mobile_no, formData.age) === 2)
+        toast.error("Enter valid mobile");
+      if (validateInput(formData.patient_name, formData.mobile_no, formData.age) === 3)
+        toast.error("Enter valid age");
+      return;
+    }
+    if (compareDates(formData.date_of_app) === -1) {
+      toast.error("Select valid date");
+      return;
+    }
+    if (checkTimeInRange(formData.time_of_app) === 0) {
+      toast.error("Select proper time");
+      return;
+    }
+
+
+    mutate(formData);
+    setFormData({
+      "patient_name": "",
+      "mobile_no": "",
+      "age": 0,
+      "gender": "",
+      "date_of_app": "",
+      "time_of_app": ""
+    })
   };
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -55,7 +142,7 @@ const AddAppointment = () => {
                     className='grow'
                     placeholder='age'
                     name='age'
-                    value={formData.age}
+                    value={formData.age === 0 ? '' : formData.age}
                     onChange={handleChange}
                   />
                 </label>
