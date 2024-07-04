@@ -210,7 +210,7 @@ const averageAppointmentsPerDay = asyncHandler(async (req, res) => {
     console.log(lastMonthsTotalApp.length)
     const avgAppointments = Math.ceil(lastMonthsTotalApp?.length / 7);
     const previousAvgAppointments = Math.ceil(previousLastMonthsTotalApp?.length / 7);
-    return res.status(200).json(new ApiResponse(200, { "Average Appointments": avgAppointments, difference: avgAppointments - previousAvgAppointments }, "Average appointments per day fetched sucessfully"))
+    return res.status(200).json(new ApiResponse(200, { "Average_Appointments": avgAppointments, difference: avgAppointments - previousAvgAppointments }, "Average appointments per day fetched sucessfully"))
 })
 export {
     dailyWeeklyMonthlyPatientCount,

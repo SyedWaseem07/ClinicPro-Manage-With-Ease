@@ -1,0 +1,7 @@
+/Clinic-Frontend/src/context/
+/Clinic-Frontend/src/hooks/
+/Clinic-Frontend/src/components/*.jsx
+
+/Clinic-Frontend/src/pages/common/*.jsx
+/Clinic-Frontend/src/pages/doctor/*.jsx
+/Clinic-Frontend/src/pages/receptionist/*.jsx
