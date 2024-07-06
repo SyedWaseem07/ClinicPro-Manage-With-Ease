@@ -17,6 +17,7 @@ import { toast } from "react-hot-toast"
 import axios from 'axios';
 const Navbar = ({ user, theme, setTheme }) => {
   const navigator = useNavigate();
+  const [checked, setChecked] = useState(false);
   const queryClient = useQueryClient();
   const { mutate, isLoading } = useMutation({
     mutationFn: async () => {
@@ -47,13 +48,19 @@ const Navbar = ({ user, theme, setTheme }) => {
   const handleLogout = () => {
     mutate();
   }
+
+
+
   return (
     <>
       <div className="drawer hidden md:block md:drawer-open md:w-[25%] md:mr-[2%] bg-base-200 border-r-[1px] border-neutral-content">
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
         <div className="drawer-side">
           <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label>
-          <div className='w-full'>
+          <div className='w-full' onClick={(e) => {
+            e.preventDefault();
+            navigator(`/user/${user.role}/`)
+          }}>
             {theme === "forest" ? <img src={LogoDark} alt="dark Logo" className='md:h-[12.5rem] h-32 mx-auto md:mt-2 md:ml-4 cursor-pointer' onClick={handleLogoSubmit} /> : <img src={LogoWhite} alt="light Logo" className='md:h-[12.5rem] h-32 mx-auto md:mt-2 md:ml-4 cursor-pointer' onClick={handleLogoSubmit} />}
           </div>
           <ul className="menu text-base-content w-80 px-4">
@@ -123,7 +130,12 @@ const Navbar = ({ user, theme, setTheme }) => {
 
       {/* Mobile nav bar */}
       <div className="btm-nav md:hidden z-[999]">
-        <button className="text-success">
+        <button className="text-success"
+          onClick={(e) => {
+            e.preventDefault();
+            navigator(`/user/${user.role}/`)
+          }}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5"
@@ -139,10 +151,10 @@ const Navbar = ({ user, theme, setTheme }) => {
 
         </button>
         <div className="drawer">
-          <input id="my-drawer" type="checkbox" className="drawer-toggle" />
+          <input id="my-drawer" type="checkbox" className="drawer-toggle" checked={checked} />
           <div className="drawer-content">
             <label htmlFor="my-drawer" className="drawer-button">
-              < MdFormatListBulleted size={"1.5rem"} className="text-success" />
+              < MdFormatListBulleted size={"1.5rem"} className="text-success" onClick={() => setChecked(true)} />
             </label >
           </div>
           <div className="drawer-side">
@@ -152,17 +164,17 @@ const Navbar = ({ user, theme, setTheme }) => {
               {/* Sidebar content here */}
               {theme === "forest" ? <img src={LogoDark} alt="dark Logo" className='h-64  mx-auto md:mt-2 md:ml-4 cursor-pointer' onClick={handleLogoSubmit} /> : <img src={LogoWhite} alt="light Logo" className='h-64 mx-auto md:mt-2 md:ml-4 cursor-pointer' onClick={handleLogoSubmit} />}
               {user.role === "doctor" ? (<>
-                <NavLink to="/user/doctor/"><li className='hover:bg-neutral rounded-full'><a><MdOutlineDashboard /> Dashboard</a></li></NavLink>
-                <NavLink to="/user/doctor/appointments"><li className='hover:bg-neutral rounded-full'><a><CiMemoPad /> Appointments</a></li></NavLink>
-                <NavLink to="/user/doctor/patients"><li className='hover:bg-neutral rounded-full'><a><FaAddressCard /> Pateint Details</a></li></NavLink>
-                <NavLink to="/user/doctor/searchPatient"><li className='hover:bg-neutral rounded-full'><a><ImSearch /> Search Patient</a></li></NavLink>
+                <NavLink to="/user/doctor/" onClick={() => setChecked(false)}><li className='hover:bg-neutral rounded-full'><a><MdOutlineDashboard /> Dashboard</a></li></NavLink>
+                <NavLink to="/user/doctor/appointments" onClick={() => setChecked(false)}><li className='hover:bg-neutral rounded-full'><a><CiMemoPad /> Appointments</a></li></NavLink>
+                <NavLink to="/user/doctor/patients" onClick={() => setChecked(false)}><li className='hover:bg-neutral rounded-full'><a><FaAddressCard /> Pateint Details</a></li></NavLink>
+                <NavLink to="/user/doctor/searchPatient" onClick={() => setChecked(false)}><li className='hover:bg-neutral rounded-full'><a><ImSearch /> Search Patient</a></li></NavLink>
               </>) : (<>
-                <NavLink to="/user/receptionist/"><li className='hover:bg-neutral rounded-full'><a><CiMemoPad /> Appointments</a></li></NavLink>
-                <NavLink to="/user/receptionist/patients"><li className='hover:bg-neutral rounded-full'><a><FaAddressCard /> Pateint Details</a></li></NavLink>
-                <NavLink to="/user/receptionist/searchPatient"><li className='hover:bg-neutral rounded-full'><a><ImSearch /> Search Patient</a></li></NavLink>
-                <NavLink to="/user/receptionist/addPatient"><li className='hover:bg-neutral rounded-full'><a><MdPersonAddAlt /> Add Patient</a></li></NavLink>
-                <NavLink to="/user/receptionist/updatePatient"><li className='hover:bg-neutral rounded-full'><a><MdPersonAddAlt /> Update Patient</a></li></NavLink>
-                <NavLink to="/user/receptionist/addAppointment"><li className='hover:bg-neutral rounded-full'><a><MdOutlinePostAdd /> Add Appointment</a></li></NavLink>
+                <NavLink to="/user/receptionist/" onClick={() => setChecked(false)}><li className='hover:bg-neutral rounded-full'><a><CiMemoPad /> Appointments</a></li></NavLink>
+                <NavLink to="/user/receptionist/patients" onClick={() => setChecked(false)}><li className='hover:bg-neutral rounded-full' ><a ><FaAddressCard /> Pateint Details</a></li></NavLink>
+                <NavLink to="/user/receptionist/searchPatient" onClick={() => setChecked(false)}><li className='hover:bg-neutral rounded-full'><a><ImSearch /> Search Patient</a></li></NavLink>
+                <NavLink to="/user/receptionist/addPatient" onClick={() => setChecked(false)}><li className='hover:bg-neutral rounded-full'><a><MdPersonAddAlt /> Add Patient</a></li></NavLink>
+                <NavLink to="/user/receptionist/updatePatient" onClick={() => setChecked(false)}><li className='hover:bg-neutral rounded-full'><a><MdPersonAddAlt /> Update Patient</a></li></NavLink>
+                <NavLink to="/user/receptionist/addAppointment" onClick={() => setChecked(false)}><li className='hover:bg-neutral rounded-full'><a><MdOutlinePostAdd /> Add Appointment</a></li></NavLink>
               </>)}
               <li><label className="flex cursor-pointer gap-2">
                 <svg
@@ -208,8 +220,11 @@ const Navbar = ({ user, theme, setTheme }) => {
                   <FaAngleDown />
                 </summary>
                 <ul className="menu bg-base-100 rounded-box  shadow">
-                  <NavLink to={`/user/${user.role}/profile`}><li className='hover:bg-neutral rounded-full'><a>Profile</a></li></NavLink>
-                  <li className='hover:bg-neutral rounded-full' onClick={mutate} aria-disabled={isLoading}><a>Logout</a></li>
+                  <NavLink to={`/user/${user.role}/profile`} onClick={() => setChecked(false)}><li className='hover:bg-neutral rounded-full'><a>Profile</a></li></NavLink>
+                  <li className='hover:bg-neutral rounded-full' onClick={() => {
+                    setChecked(false)
+                    mutate();
+                  }} aria-disabled={isLoading}><a>Logout</a></li>
                 </ul>
               </details>
             </button>

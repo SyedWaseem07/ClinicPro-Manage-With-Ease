@@ -14,7 +14,7 @@ const AddAppointment = () => {
     "time_of_app": ""
   })
   const queryClient = useQueryClient();
-  const { mutate, isLoading } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: async (data) => {
       try {
         const res = await axios.post("/api/v1/users/receptionist/addAppointment", data);
@@ -31,6 +31,14 @@ const AddAppointment = () => {
       queryClient.invalidateQueries({ queryKey: ['authUser'] });
       queryClient.invalidateQueries({ queryKey: ['allAppointments'] });
       queryClient.invalidateQueries({ queryKey: ['todaysAppointments'] });
+      setFormData({
+        "patient_name": "",
+        "mobile_no": "",
+        "age": 0,
+        "gender": "",
+        "date_of_app": "",
+        "time_of_app": ""
+      })
     },
     onError: (error) => {
       toast.error(error.message);
@@ -196,7 +204,7 @@ const AddAppointment = () => {
 
 
             </div>
-            <button className='btn rounded-full btn-primary text-primary-content font-semibold text-[1.2rem] w-52 mx-auto mt-4 py-1'>Add</button>
+            <button className='btn rounded-full btn-primary text-primary-content font-semibold text-[1.2rem] w-52 mx-auto mt-4 py-1' disabled={isPending}>Add{isPending && <span className="loading loading-spinner loading-sm text-primary-content"></span>}</button>
           </form>
         </div>
       </div>

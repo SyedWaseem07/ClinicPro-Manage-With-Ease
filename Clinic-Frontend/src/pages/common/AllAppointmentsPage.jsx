@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react'
 // import { todaysAppointments } from "../../../dummyData"
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 const AllAppointmentsPage = () => {
   const [showTodaysApp, setShowTodaysApp] = useState(true);
   const [showAllApp, setShowAllApp] = useState(false);
+
   const queryClient = useQueryClient();
-  const { data: appointments, isSuccess: allAppLoading, refetch, isRefetchError: allReftchError } = useQuery({
+  const { data: allAppointments, isSuccess: allAppLoading, refetch, isRefetchError: allReftchError } = useQuery({
     queryKey: ['allAppointments'],
     queryFn: async () => {
       try {
+        console.log("called all")
+
         const res = await axios.get('/api/v1/users/appointments');
         return res.data.data;
       } catch (error) {
@@ -23,6 +26,7 @@ const AllAppointmentsPage = () => {
     queryKey: ['todaysAppointments'],
     queryFn: async () => {
       try {
+        console.log("called today")
         const res = await axios.get('/api/v1/users/dailyAppointments');
         return res.data.data;
       } catch (error) {
@@ -31,7 +35,6 @@ const AllAppointmentsPage = () => {
       }
     }
   })
-
 
   useEffect(() => {
     refetch();
@@ -43,6 +46,212 @@ const AllAppointmentsPage = () => {
     if (!dailyAppLoading || !allAppLoading) queryClient.invalidateQueries({ queryKey: ['authUser'] })
   }, [])
 
+  if (!dailyAppLoading || !allAppLoading) return (<div className='skeleton md:w-[70%]  w-[100%] px-5 md:px-0 mx-auto mt-7 font-semibold'>
+    <h3 className='skeleton my-4 text-2xl font-bold text-neutral-content text-center'></h3>
+    <div className='skeleton md:w-[70%]  w-[100%] px-5 md:px-0 mx-auto mt-7 font-semibold bg-neutral'>
+      <h3 className='skeleton my-4'></h3>
+      <div className="skeleton collapse collapse-plus border-b-2 border-primary">
+        <input type="radio" name="my-accordion-3" checked />
+        <div className="skeleton collapse-title">
+        </div>
+        <div className="skeleton bg-neutral">
+          <div className="skeleton overflow-x-auto bg-neutral">
+            <table className="skeleton table table-xs md:table-sm font-semibold">
+              {/* head */}
+              <thead className='skeleton '>
+                <tr className='skeleton'>
+                  <th className='skeleton'></th>
+                  <th className='skeleton'></th>
+                  <th className='skeleton'></th>
+                  <th className='hidden md:block skeleton'></th>
+                  <th className='hidden md:block skeleton'></th>
+                  <th className='skeleton'></th>
+                  <th className='skeleton'></th>
+                </tr>
+              </thead>
+              <tbody className='skeleton'>
+                <tr className='skeleton'>
+                  <th className='skeleton'></th>
+                  <td className='skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className=' skeleton'></td>
+                </tr>
+                <tr className='skeleton'>
+                  <th className='skeleton'></th>
+                  <td className='skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className=' skeleton'></td>
+                </tr>
+                <tr className='skeleton'>
+                  <th className='skeleton'></th>
+                  <td className='skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className=' skeleton'></td>
+                </tr>
+                <tr className='skeleton'>
+                  <th className='skeleton'></th>
+                  <td className='skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className=' skeleton'></td>
+                </tr>
+                <tr className='skeleton'>
+                  <th className='skeleton'></th>
+                  <td className='skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className=' skeleton'></td>
+                </tr>
+                <tr className='skeleton'>
+                  <th className='skeleton'></th>
+                  <td className='skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className=' skeleton'></td>
+                </tr>
+                <tr className='skeleton'>
+                  <th className='skeleton'></th>
+                  <td className='skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className=' skeleton'></td>
+                </tr>
+                <tr className='skeleton'>
+                  <th className='skeleton'></th>
+                  <td className='skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className=' skeleton'></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div className='skeleton md:w-[70%]  w-[100%] px-5 md:px-0 mx-auto mt-7 font-semibold'>
+      <h3 className='skeleton my-4'></h3>
+      <div className="skeleton collapse collapse-plus  border-b-2 border-primary">
+        <input type="radio" name="my-accordion-3" checked={showTodaysApp} onClick={() => {
+          setShowAllApp(false)
+          setShowTodaysApp(prev => !prev)
+        }} />
+        <div className="skeleton collapse-title">
+        </div>
+        <div className="skeleton collapse-content">
+          <div className="skeleton overflow-x-auto">
+            <table className="skeleton table table-xs md:table-sm font-semibold">
+              {/* head */}
+              <thead className='skeleton '>
+                <tr className='skeleton'>
+                  <th className='skeleton'></th>
+                  <th className='skeleton'></th>
+                  <th className='skeleton'></th>
+                  <th className='hidden md:block skeleton'></th>
+                  <th className='hidden md:block skeleton'></th>
+                  <th className='skeleton'></th>
+                  <th className='skeleton'></th>
+                </tr>
+              </thead>
+              <tbody className='skeleton'>
+                <tr className='skeleton'>
+                  <th className='skeleton'></th>
+                  <td className='skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className=' skeleton'></td>
+                </tr>
+                <tr className='skeleton'>
+                  <th className='skeleton'></th>
+                  <td className='skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className=' skeleton'></td>
+                </tr>
+                <tr className='skeleton'>
+                  <th className='skeleton'></th>
+                  <td className='skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className=' skeleton'></td>
+                </tr>
+                <tr className='skeleton'>
+                  <th className='skeleton'></th>
+                  <td className='skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className=' skeleton'></td>
+                </tr>
+                <tr className='skeleton'>
+                  <th className='skeleton'></th>
+                  <td className='skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className=' skeleton'></td>
+                </tr>
+                <tr className='skeleton'>
+                  <th className='skeleton'></th>
+                  <td className='skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className=' skeleton'></td>
+                </tr>
+                <tr className='skeleton'>
+                  <th className='skeleton'></th>
+                  <td className='skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className=' skeleton'></td>
+                </tr>
+                <tr className='skeleton'>
+                  <th className='skeleton'></th>
+                  <td className='skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='hidden md:block skeleton'></td>
+                  <td className='skeleton'></td>
+                  <td className=' skeleton'></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>)
   return (
     <div className='md:w-[70%]  w-[100%] px-5 md:px-0 mx-auto mt-7 font-semibold' data-theme="cupcake">
       <h3 className='my-4 text-2xl font-bold text-neutral-content text-center'>Appointment Details</h3>
@@ -117,7 +326,7 @@ const AllAppointmentsPage = () => {
               <tbody>
                 {/* row 1 */}
                 {
-                  appointments && appointments?.map((appointment, index) => (
+                  allAppointments && allAppointments?.map((appointment, index) => (
                     <tr className="" key={index}>
                       <th key={index + 1}>{index + 1}</th>
                       <td key={index + 2}>{appointment.patient_name}</td>

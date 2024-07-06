@@ -31,10 +31,11 @@ const UpdatePatientDetails = () => {
     "amount": '',
     "date": ''
   })
+  const [step2Submit, setStep2Submit] = useState(false);
   const queryClient = useQueryClient();
 
 
-  const { mutate: step1Call, isLoading: step1Loading } = useMutation({
+  const { mutate: step1Call, isPending: step1Loading } = useMutation({
     mutationFn: async (formData) => {
       try {
         console.log("api call", { ...formData })
@@ -52,7 +53,7 @@ const UpdatePatientDetails = () => {
     }
   })
 
-  const { mutate: addMedicineCall, isLoading: medicineLoading } = useMutation({
+  const { mutate: addMedicineCall, isPending: medicineLoading } = useMutation({
     mutationFn: async (medicine) => {
       try {
         const res = await axios.post('/api/v1/users/receptionist/addMedicine', { ...medicine });
@@ -63,6 +64,7 @@ const UpdatePatientDetails = () => {
     },
     onSuccess: (data) => {
       toast.success("Medcine added successfully");
+      setStep2Submit(true);
       queryClient.invalidateQueries({ queryKey: ['allPatients'] })
     },
     onError: (error) => {
@@ -70,7 +72,7 @@ const UpdatePatientDetails = () => {
     }
   })
 
-  const { mutate: addReportCall, isLoading: reportLoading } = useMutation({
+  const { mutate: addReportCall, isPending: reportLoading } = useMutation({
     mutationFn: async (report) => {
       try {
         console.log("from api", report)
@@ -83,13 +85,14 @@ const UpdatePatientDetails = () => {
     onSuccess: (data) => {
       toast.success("Report added successfully");
       queryClient.invalidateQueries({ queryKey: ['allPatients'] })
+      setStep2Submit(true);
     },
     onError: (error) => {
       toast.error(error.message);
     }
   })
 
-  const { mutate: addPaymentCall, isLoading: paymentLoading } = useMutation({
+  const { mutate: addPaymentCall, isPending: paymentLoading } = useMutation({
     mutationFn: async (payment) => {
       try {
         console.log(payment);
@@ -109,7 +112,7 @@ const UpdatePatientDetails = () => {
   })
   return (
     <>
-      <Form formData={formData} setFormData={setFormData} fromUpdatePatient={true} medicine={medicine} setMedicine={setMedicine} report={report} setReport={setReport} payment={payment} setPayment={setPayment} step1Call={step1Call} step1Loading={step1Loading} addMedicineCall={addMedicineCall} medicineLoading={medicineLoading} addReportCall={addReportCall} reportLoading={reportLoading} firstTime={firstTime} setFirstTime={setFirstTime} addPaymentCall={addPaymentCall} paymentLoading={paymentLoading} />
+      <Form formData={formData} setFormData={setFormData} fromUpdatePatient={true} medicine={medicine} setMedicine={setMedicine} report={report} setReport={setReport} payment={payment} setPayment={setPayment} step1Call={step1Call} step1Loading={step1Loading} addMedicineCall={addMedicineCall} medicineLoading={medicineLoading} addReportCall={addReportCall} reportLoading={reportLoading} firstTime={firstTime} setFirstTime={setFirstTime} addPaymentCall={addPaymentCall} paymentLoading={paymentLoading} step2Submit={step2Submit} />
 
     </>
   )

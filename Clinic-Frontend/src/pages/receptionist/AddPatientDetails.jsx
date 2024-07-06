@@ -48,6 +48,7 @@ const AddPatientDetails = () => {
     },
     onSuccess: (data) => {
       toast.success("Step-1 completed successfully");
+      queryClient.invalidateQueries({ queryKey: ['allPatients'] });
       setStep1Submit(true);
     },
     onError: (error) => {
@@ -55,7 +56,7 @@ const AddPatientDetails = () => {
     }
   })
 
-  const { mutate: addMedicineCall, isLoading: medicineLoading } = useMutation({
+  const { mutate: addMedicineCall, isPending: medicineLoading } = useMutation({
     mutationFn: async (medicine) => {
       try {
         const res = await axios.post('/api/v1/users/receptionist/addMedicine', { ...medicine });

@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom'
 import toast from 'react-hot-toast';
 import validateInput from '../hooks/validateInput';
 import { validateString } from '../hooks/validateInput';
+import { usePatientsContext } from '../context/PatientDetails.context';
 let loader = true;
 const Form = ({ formData, setFormData, fromUpdatePatient, medicine, setMedicine, report, setReport, payment, setPayment, step1Call, step1Loading, addMedicineCall, medicineLoading, addReportCall, reportLoading, firstTime, setFirstTime, addPaymentCall, paymentLoading, step1Submit, step2Submit }) => {
   const [showSymptoms, setShowSymptoms] = useState('');
@@ -14,9 +15,11 @@ const Form = ({ formData, setFormData, fromUpdatePatient, medicine, setMedicine,
   const [reportFile, setReportFile] = useState(null);
   const [diseases, setDiseases] = useState([]);
   const { name } = useParams();
+  console.log(name)
   const { updatePatientDetails, setUpdatePatientDetails } = useUpdatePatientsContext();
+  const { visitedPatientDetails } = usePatientsContext();
+  console.log(updatePatientDetails)
   let patientToUpdate = updatePatientDetails.filter(patient => patient.patient_name === name)[0];
-
   useEffect(() => {
     if (firstTime) {
       setFormData({
@@ -249,8 +252,8 @@ const Form = ({ formData, setFormData, fromUpdatePatient, medicine, setMedicine,
               </div>
 
             </div>
-            <button className='btn rounded-full btn-primary text-primary-content font-semibold text-[1.2rem] w-52 mx-auto mt-4 py-1'
-            >{fromUpdatePatient ? "Update" : "Add"} {step1Loading ? <span className="loading loading-spinner loading-sm text-primary-content"></span> : <></>}</button>
+            <button className='btn rounded-full btn-primary text-primary-content font-semibold text-[1.2rem] w-52 mx-auto mt-4 py-1' disabled={step1Loading}
+            >{fromUpdatePatient ? "Update" : "Add"} {step1Loading && <span className="loading loading-spinner loading-sm text-primary-content"></span>}</button>
           </form>
         </div>
       </div>
@@ -291,7 +294,7 @@ const Form = ({ formData, setFormData, fromUpdatePatient, medicine, setMedicine,
                   <option value="Night">Night</option>
                 </select>
               </div>
-              <button className="btn rounded-full btn-primary text-primary-content font-semibold text-[1.2rem] w-52 mx-auto mt-4 py-1">Add Medicine{medicineLoading ? <span className="loading loading-spinner loading-sm text-primary-content"></span> : <></>}</button>
+              <button className="btn rounded-full btn-primary text-primary-content font-semibold text-[1.2rem] w-52 mx-auto mt-4 py-1" disabled={medicineLoading}>Add Medicine{medicineLoading && <span className="loading loading-spinner loading-sm text-primary-content"></span>}</button>
             </form>
             <div className="divider lg:divider-horizontal"></div>
             <form className='flex flex-col gap-4 text-neutral-content' onSubmit={handleReport}>
@@ -327,7 +330,7 @@ const Form = ({ formData, setFormData, fromUpdatePatient, medicine, setMedicine,
                   <FaPlusCircle className='cursor-pointer' size={18} />
                 </label>
               </div>
-              <button className="btn rounded-full btn-primary text-primary-content font-semibold text-[1.2rem] w-52 mx-auto mt-4 py-1">Add Report{reportLoading ? <span className="loading loading-spinner loading-sm text-primary-content"></span> : <></>}</button>
+              <button className="btn rounded-full btn-primary text-primary-content font-semibold text-[1.2rem] w-52 mx-auto mt-4 py-1" disabled={reportLoading}>Add Report{reportLoading && <span className="loading loading-spinner loading-sm text-primary-content"></span>}</button>
             </form>
           </div> : <></>}
 
@@ -341,8 +344,8 @@ const Form = ({ formData, setFormData, fromUpdatePatient, medicine, setMedicine,
         <input type="radio" name="my-accordion-3" />
         <div className="collapse-title text-xl font-medium">Step-3 Add Payment Details</div>
         <div className="collapse-content">
-          {((step1Submit && step2Submit) || fromUpdatePatient) ? <h3 className='text-neutral-content font-semibold text-center'>Prescriptions of patient <span className='border-2 border-warning px-4 py-1'>{formData.patient_name}</span></h3> : <h3 className='text-neutral-content font-semibold text-center'>Please fill above steps first</h3>}
-          {((step1Submit && step2Submit) || fromUpdatePatient) ? <form className='flex flex-col gap-4 text-neutral-content py-8 px-14 w-[80%] md:w-[50%] mx-auto' onSubmit={handlePayment}>
+          {((step1Submit && step2Submit) || (fromUpdatePatient && step2Submit)) ? <h3 className='text-neutral-content font-semibold text-center'>Prescriptions of patient <span className='border-2 border-warning px-4 py-1'>{formData.patient_name}</span></h3> : <h3 className='text-neutral-content font-semibold text-center'>Please fill above steps first</h3>}
+          {((step1Submit && step2Submit) || (fromUpdatePatient && step2Submit)) ? <form className='flex flex-col gap-4 text-neutral-content py-8 px-14 w-[80%] md:w-[50%] mx-auto' onSubmit={handlePayment}>
             <label className='input input-bordered rounded flex items-center gap-2'>
               <input
                 type='number'
@@ -364,7 +367,7 @@ const Form = ({ formData, setFormData, fromUpdatePatient, medicine, setMedicine,
                 onChange={(e) => setPayment({ ...payment, "date": e.target.value })}
               />
             </label>
-            <button className='btn rounded-full btn-primary text-primary-content font-semibold text-[1.2rem]'>Add{paymentLoading ? <span className="loading loading-spinner loading-sm text-primary-content"></span> : <></>}</button>
+            <button className='btn rounded-full btn-primary text-primary-content font-semibold text-[1.2rem]' disabled={paymentLoading}>Add{paymentLoading && <span className="loading loading-spinner loading-sm text-primary-content"></span>}</button>
           </form> : <></>}
         </div>
       </div>

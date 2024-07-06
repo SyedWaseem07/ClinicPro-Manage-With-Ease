@@ -8,7 +8,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 import toast from "react-hot-toast"
 const Dashboard = () => {
-  const { data: revenue, isSuccess: isRevenueLoading } = useQuery({
+  const { data: revenue, isSuccess: isRevenueSuccess, refetch: revenueRefetch } = useQuery({
     queryKey: ['revenueInfo'],
     queryFn: async () => {
       try {
@@ -20,7 +20,7 @@ const Dashboard = () => {
       }
     }
   })
-  const { data: patientCount, isSuccess: isPatientCountLoading } = useQuery({
+  const { data: patientCount, isSuccess: isPatientCountSuccess, refetch: patientRefetch } = useQuery({
     queryKey: ['PatientCount'],
     queryFn: async () => {
       try {
@@ -32,7 +32,7 @@ const Dashboard = () => {
       }
     }
   })
-  const { data: avgAppointments, isSuccess: isAverageAppointmentsLoading } = useQuery({
+  const { data: avgAppointments, isSuccess: isAverageAppointmentsSuccess, refetch: avgAppRefetch } = useQuery({
     queryKey: ['AverageAppointments'],
     queryFn: async () => {
       try {
@@ -44,16 +44,102 @@ const Dashboard = () => {
       }
     }
   })
-  // useEffect(() => {
+  useEffect(() => {
+    revenueRefetch();
+    patientRefetch();
+    avgAppRefetch();
+  }, [])
 
-  // }, [])
+  if (!isRevenueSuccess && !isAverageAppointmentsSuccess && !isPatientCountSuccess) return (<div className='skeleton lg:w-[70%] px-5 pb-10 md:px-0 w-full  mx-auto mt-7 font-semibold mb-8 md:mb-0'>
+    <div className='skeleton my-2 text-2xl font-bold text-neutral-content text-center w-44 h-8 mx-auto'></div>
+    <div className='skeleton flex items-center my-2 flex-col w-[100%]'>
+      <div className='skeleton flex flex-col w-full mx-auto bg-neutral'>
+        <div className='skeleton mt-1 mb-2 text-lg text-center w-44 h-8 mx-auto'></div>
+        <div className="skeleton stats stats-vertical lg:stats-horizontal shadow bg-neutral mx-auto">
+          <div className="skeleton stat mx-auto">
+            <div className="skeleton stat-figure text-primary"></div>
+            <div className="skeleton stat-title w-36 h-5"></div>
+            <div className="skeleton stat-value w-36 h-16"></div>
+            <div className="skeleton stat-desc w-36 h-5"></div>
+          </div>
+
+          <div className="skeleton stat mx-auto">
+            <div className="skeleton stat-figure text-primary"></div>
+            <div className="skeleton stat-title w-36 h-5"></div>
+            <div className="skeleton stat-value w-36 h-16"></div>
+            <div className="skeleton stat-desc w-36 h-5"></div>
+          </div>
+
+          <div className="skeleton stat mx-auto">
+            <div className="skeleton stat-figure text-primary"></div>
+            <div className="skeleton stat-title w-36 h-5"></div>
+            <div className="skeleton stat-value w-36 h-16"></div>
+            <div className="skeleton stat-desc w-36 h-5"></div>
+          </div>
+        </div>
+      </div>
+      <div className="skeleton divider divider-neutral"></div>
+
+      <div className='skeleton flex flex-col w-full mx-auto bg-neutral'>
+        <div className='skeleton mt-1 mb-2 text-lg text-center w-44 h-8 mx-auto'></div>
+        <div className="skeleton stats stats-vertical shadow bg-neutral lg:stats-horizontal mx-auto">
+          <div className="skeleton stat mx-auto">
+            <div className="skeleton stat-figure text-primary">
+            </div>
+            <div className="skeleton stat-title w-36 h-5"></div>
+            <div className="skeleton stat-value w-36 h-16"></div>
+            <div className="skeleton stat-desc w-36 h-5"></div>
+          </div>
+          <div className="skeleton stat">
+            <div className="skeleton stat-figure text-secondary" >
+              <div className="skeleton avatar">
+                <div className="skeleton w-16 rounded-full">
+                </div>
+              </div>
+            </div>
+            <div className="skeleton stat-value w-28 h-10"></div>
+            <div className="skeleton stat-title w-28 h-8"></div>
+            <div className="skeleton stat-desc text-secondary w-28 h-5"></div>
+          </div >
+
+        </div>
+      </div>
+      <div className="skeleton divider divider-neutral"></div>
+
+      <div className='skeleton flex flex-col w-full mx-auto bg-neutral'>
+        <div className='skeleton mt-1 mb-2 text-lg text-center w-44 h-8 mx-auto'></div>
+        <div className="skeleton stats stats-vertical lg:stats-horizontal shadow bg-neutral mx-auto">
+          <div className="skeleton stat mx-auto">
+            <div className="skeleton stat-figure text-primary"></div>
+            <div className="skeleton stat-title w-36 h-5"></div>
+            <div className="skeleton stat-value w-36 h-16"></div>
+            <div className="skeleton stat-desc w-36 h-5"></div>
+          </div>
+
+          <div className="skeleton stat mx-auto">
+            <div className="skeleton stat-figure text-primary"></div>
+            <div className="skeleton stat-title w-36 h-5"></div>
+            <div className="skeleton stat-value w-36 h-16"></div>
+            <div className="skeleton stat-desc w-36 h-5"></div>
+          </div>
+
+          <div className="skeleton stat mx-auto">
+            <div className="skeleton stat-figure text-primary"></div>
+            <div className="skeleton stat-title w-36 h-5"></div>
+            <div className="skeleton stat-value w-36 h-16"></div>
+            <div className="skeleton stat-desc w-36 h-5"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>)
   return (
     <div className='lg:w-[70%] px-5 pb-10 md:px-0 w-full  mx-auto mt-7 font-semibold mb-8 md:mb-0'>
       <h3 className='my-2 text-2xl font-bold text-neutral-content text-center'>Clinic Statistics</h3>
       <div className='flex items-center my-2 flex-col w-[100%]'>
         <div className='flex flex-col w-full mx-auto'>
           <h4 className='mt-1 mb-2 text-lg text-center'>Revenue Stats</h4>
-          {isRevenueLoading && <div className="stats stats-vertical lg:stats-horizontal shadow bg-neutral mx-auto">
+          {isRevenueSuccess && <div className="stats stats-vertical lg:stats-horizontal shadow bg-neutral mx-auto">
             <div className="stat mx-auto">
               <div className="stat-figure text-primary">
                 <GiReceiveMoney size={30} />
@@ -86,7 +172,7 @@ const Dashboard = () => {
 
         <div className='flex flex-col w-full mx-auto'>
           <h4 className='mt-1 mb-2 text-lg text-center'>Appointments Stats</h4>
-          {isAverageAppointmentsLoading && <div className="stats stats-vertical shadow bg-neutral lg:stats-horizontal mx-auto">
+          {isAverageAppointmentsSuccess && <div className="stats stats-vertical shadow bg-neutral lg:stats-horizontal mx-auto">
             <div className="stat mx-auto">
               <div className="stat-figure text-primary">
                 <MdOutlinePostAdd size={30} />
@@ -114,7 +200,7 @@ const Dashboard = () => {
 
         <div className='flex flex-col'>
           <h4 className='mt-1 mb-2 text-lg text-center'>Patients Visit Stats</h4>
-          {isPatientCountLoading && <div className="stats stats-vertical lg:stats-horizontal shadow bg-neutral">
+          {isPatientCountSuccess && <div className="stats stats-vertical lg:stats-horizontal shadow bg-neutral">
             <div className="stat">
               <div className="stat-figure text-primary">
                 <FiUserPlus size={30} />
