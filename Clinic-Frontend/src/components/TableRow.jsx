@@ -4,13 +4,16 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useSearchedPatientsContext } from "../context/searchedPatients.context"
 import { useQuery } from "@tanstack/react-query"
+import { useUpdatePatientsContext } from '../context/UpdatePatient.context';
 const TableRow = ({ patients, fromSearch, fromUpdate }) => {
   const navigator = useNavigate();
-  const { filteredPatients, setFilteredPatients } = useSearchedPatientsContext();
+  const { filteredPatients } = useSearchedPatientsContext();
+  const { setUpdatePatientDetails } = useUpdatePatientsContext();
   const { data: authUser, isSuccess } = useQuery({ queryKey: ['authUser'] });
   const handleClick = (patient) => {
-    console.log("row", fromSearch, fromUpdate)
+    console.log("row", patient)
     let url = '';
+    setUpdatePatientDetails(new Array(patient))
     if (fromSearch && fromUpdate) url = `/user/receptionist/update/${patient.patient_name}`
     else if (fromSearch) url = `/user/${authUser.role}/patientInfo/${patient.patient_name}/${fromSearch}`
     else url = `/user/${authUser.role}/patientInfo/${patient.patient_name}`

@@ -21,7 +21,7 @@ const Form = ({ formData, setFormData, fromUpdatePatient, medicine, setMedicine,
   console.log(updatePatientDetails)
   let patientToUpdate = updatePatientDetails.filter(patient => patient.patient_name === name)[0];
   useEffect(() => {
-    if (firstTime) {
+    if (patientToUpdate) {
       setFormData({
         "patient_name": patientToUpdate.patient_name,
         "mobile_no": patientToUpdate.mobile_no,

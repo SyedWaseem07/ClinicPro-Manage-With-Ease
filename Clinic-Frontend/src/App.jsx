@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import LoginPage from './pages/LoginPage'
 import AllAppointmentsPage from './pages/common/AllAppointmentsPage'
@@ -16,8 +16,10 @@ import { Toaster } from 'react-hot-toast'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import PatientDetailsPage from './pages/common/PatientDetailsPage'
+import { usePatientsContext } from "./context/PatientDetails.context"
 const App = () => {
   const [theme, setTheme] = useState('forest');
+  const { visitedPatients, setVisitedPatients } = usePatientsContext();
   const { data: authUser, isLoading } = useQuery({
     queryKey: ['authUser'],
     queryFn: async () => {
@@ -29,6 +31,23 @@ const App = () => {
       }
     }
   })
+  const { data: patients, isSuccess, refetch, isRefetching } = useQuery({
+    queryKey: ['allPatients'],
+    queryFn: async () => {
+      try {
+        console.log("entered")
+        const res = await axios.get('/api/v1/users/allPatientDetails');
+        return res.data.data;
+      } catch (error) {
+        console.log(error);
+        return null;
+      }
+    }
+  })
+  useEffect(() => {
+    if (isSuccess)
+      setVisitedPatients(Array.from(patients));
+  }, [isSuccess])
   return (
     <div className='flex w-full mb-10 md:mb-0' data-theme={theme}>
       {authUser && <Navbar user={authUser} theme={theme} setTheme={setTheme} />}
@@ -38,7 +57,7 @@ const App = () => {
           <Route path='receptionist' >
             <Route path='' element={authUser && authUser.role === "receptionist" ? <AllAppointmentsPage /> : <Navigate to="/login" />} />
             <Route path='updatePatient' element={authUser && authUser.role === "receptionist" ? <SearchPatient fromSearch={true} fromUpdate={true} /> : <Navigate to="/login" />} />
-            <Route path='addPatient' element={authUser && authUser.role === "receptionist" ? <AddPatientDetails /> : <Navigate to="/login" />} />
+            <Route path='addPatient/:name' element={authUser && authUser.role === "receptionist" ? <AddPatientDetails /> : <Navigate to="/login" />} />
             <Route path='addAppointment' element={authUser && authUser.role === "receptionist" ? <AddAppointment /> : <Navigate to="/login" />} />
             <Route path='update/:name' element={authUser && authUser.role === "receptionist" ? <UpdatePatientDetails /> : <Navigate to="/login" />} />
             <Route path='patients' element={authUser && authUser.role === "receptionist" ? <AllPatientsPage fromHome={true} /> : <Navigate to="/login" />} />

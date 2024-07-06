@@ -6,8 +6,6 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { usePatientsContext } from "../../context/PatientDetails.context"
 import { useUpdatePatientsContext } from "../../context/UpdatePatient.context"
 import TableRow from '../../components/TableRow';
-import { useSearchedPatientsContext } from '../../context/searchedPatients.context'
-let loader = true;
 const AllPatientsPage = ({ fromHome, fromSearch, fromUpdate }) => {
   const { visitedPatients, setVisitedPatients } = usePatientsContext();
   const { setUpdatePatientDetails } = useUpdatePatientsContext();

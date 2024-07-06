@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import Form from '../../components/Form';
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query"
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { useParams } from 'react-router-dom';
 
 const AddPatientDetails = () => {
   const [formData, setFormData] = useState({
@@ -29,9 +30,41 @@ const AddPatientDetails = () => {
     "amount": '',
     "date": ''
   })
+
+  const { name } = useParams();
   const [step1Submit, setStep1Submit] = useState(false);
   const [step2Submit, setStep2Submit] = useState(false);
   const queryClient = useQueryClient();
+  const { data: allAppointments, isSuccess: allAppSuccess, refetch, isRefetchError: allReftchError } = useQuery({
+    queryKey: ['allAppointments'],
+    queryFn: async () => {
+      try {
+        console.log("called all")
+
+        const res = await axios.get('/api/v1/users/appointments');
+        return res.data.data;
+      } catch (error) {
+        toast.error("unable to fetch Todays Appointments")
+        return [];
+      }
+    }
+  })
+  useEffect(() => {
+    if (name !== null && allAppSuccess) {
+      let appPatientDetails = allAppointments.filter(app => app.patient_name === name);
+      setFormData({
+        "patient_name": appPatientDetails[0].patient_name,
+        "mobile_no": appPatientDetails[0].mobile_no,
+        "age": appPatientDetails[0].age,
+        "weight": 0,
+        "gender": appPatientDetails[0].gender,
+        "symptoms": "",
+        "last_visited": appPatientDetails[0].date_of_app
+      })
+      console.log(appPatientDetails);
+    }
+  }, [])
+
   const { mutate: step1Call, isPending: step1Loading } = useMutation({
     mutationFn: async (formData) => {
       try {

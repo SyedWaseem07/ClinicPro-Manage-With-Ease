@@ -75,7 +75,7 @@ const Navbar = ({ user, theme, setTheme }) => {
               <NavLink to="/user/receptionist/"><li className='hover:bg-neutral rounded-full'><a><CiMemoPad /> Appointments</a></li></NavLink>
               <NavLink to="/user/receptionist/patients"><li className='hover:bg-neutral rounded-full'><a><FaAddressCard /> Pateint Details</a></li></NavLink>
               <NavLink to="/user/receptionist/searchPatient"><li className='hover:bg-neutral rounded-full'><a><ImSearch /> Search Patient</a></li></NavLink>
-              <NavLink to="/user/receptionist/addPatient"><li className='hover:bg-neutral rounded-full'><a><MdPersonAddAlt /> Add Patient</a></li></NavLink>
+              <NavLink to="/user/receptionist/addPatient/null"><li className='hover:bg-neutral rounded-full'><a><MdPersonAddAlt /> Add Patient</a></li></NavLink>
               <NavLink to="/user/receptionist/updatePatient"><li className='hover:bg-neutral rounded-full'><a><MdPersonAddAlt /> Update Patient</a></li></NavLink>
               <NavLink to="/user/receptionist/addAppointment"><li className='hover:bg-neutral rounded-full'><a><MdOutlinePostAdd /> Add Appointment</a></li></NavLink>
             </>)}
@@ -172,7 +172,7 @@ const Navbar = ({ user, theme, setTheme }) => {
                 <NavLink to="/user/receptionist/" onClick={() => setChecked(false)}><li className='hover:bg-neutral rounded-full'><a><CiMemoPad /> Appointments</a></li></NavLink>
                 <NavLink to="/user/receptionist/patients" onClick={() => setChecked(false)}><li className='hover:bg-neutral rounded-full' ><a ><FaAddressCard /> Pateint Details</a></li></NavLink>
                 <NavLink to="/user/receptionist/searchPatient" onClick={() => setChecked(false)}><li className='hover:bg-neutral rounded-full'><a><ImSearch /> Search Patient</a></li></NavLink>
-                <NavLink to="/user/receptionist/addPatient" onClick={() => setChecked(false)}><li className='hover:bg-neutral rounded-full'><a><MdPersonAddAlt /> Add Patient</a></li></NavLink>
+                <NavLink to="/user/receptionist/addPatient/null" onClick={() => setChecked(false)}><li className='hover:bg-neutral rounded-full'><a><MdPersonAddAlt /> Add Patient</a></li></NavLink>
                 <NavLink to="/user/receptionist/updatePatient" onClick={() => setChecked(false)}><li className='hover:bg-neutral rounded-full'><a><MdPersonAddAlt /> Update Patient</a></li></NavLink>
                 <NavLink to="/user/receptionist/addAppointment" onClick={() => setChecked(false)}><li className='hover:bg-neutral rounded-full'><a><MdOutlinePostAdd /> Add Appointment</a></li></NavLink>
               </>)}
