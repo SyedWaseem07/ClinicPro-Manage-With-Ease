@@ -7,6 +7,7 @@ import { Bill_Info } from "../models/bill_info.model.js"
 import { Medicine } from "../models/medicine.model.js"
 import { Report } from "../models/report.model.js"
 import { uploadOnCloudinary } from "../utils/cloudinary.js"
+import { v2 as cloudinary } from "cloudinary"
 
 // add appointment
 // Post :- /api/v1/users/receptionist/addAppointment
@@ -259,13 +260,16 @@ const addMedicine = asyncHandler(async (req, res) => {
     if (existingMedicine)
         return res.status(201).json(new ApiResponse(200, existingMedicine, "Medicine Added Successfully"))
 
+    const deletedMedicine = await Medicine.find({
+        "patient_name": patient_name
+    })
     const medicine = await Medicine.create({
         patient_name, medicine_name, dosage
     })
 
     if (!medicine) throw new ApiError(500, "Unable to store medicine");
 
-    return res.status(201).json(new ApiResponse(200, medicine, "Medicine Added Successfully"))
+    return res.status(201).json(new ApiResponse(200, { "Added": medicine, "deleted": deletedMedicine }, "Medicine Added Successfully"))
 })
 
 // add report details
@@ -277,9 +281,17 @@ const addReport = asyncHandler(async (req, res) => {
     console.log(req.files);
     if (!req.file?.path) throw new ApiError(400, "Report file required");
 
+    const deletedReports = await Report.find({
+        "patient_name": patient_name,
+        "report_name": report_name
+    })
+    for (let i = 0; i < deletedReports.length; ++i) {
+        await cloudinary.uploader.destroy(deletedReports[i].url.split("/").pop().split(".")[0]);
+    }
     const reportFile = await uploadOnCloudinary(req.file?.path);
 
     if (!reportFile) throw new ApiError(500, "Unable to store report on cloudinary");
+
 
     const report = await Report.create({
         patient_name, report_name,
@@ -288,7 +300,7 @@ const addReport = asyncHandler(async (req, res) => {
 
     if (!report) throw new ApiError(500, "Unable to store report");
 
-    return res.status(201).json(new ApiResponse(200, report, "Report Added Successfully"))
+    return res.status(201).json(new ApiResponse(200, { "Added": report, "deleted": deletedReports }, "Report Added Successfully"))
 })
 
 // add bill info
@@ -307,7 +319,7 @@ const addPaymentDetails = asyncHandler(async (req, res) => {
     return res.status(201).json(new ApiResponse(200, paymentDetails, "Payment Deatils added successfully"));
 })
 
-const deleteAppointments = asyncHandler(async (req, res) => {
+const deleteLastMonthsAppointments = asyncHandler(async (req, res) => {
     const currentDate = new Date();
     const end = new Date(Date.now() - currentDate.getDate() * 24 * 60 * 60 * 1000);
     let start;
@@ -321,14 +333,41 @@ const deleteAppointments = asyncHandler(async (req, res) => {
         if (end.getFullYear() % 4 === 0) previousDate = new Date(end - 28 * 24 * 60 * 60 * 1000);
         else start = new Date(end - 27 * 24 * 60 * 60 * 1000);
     }
-    const deletedRecords = await Appointment.deleteMany({
+    const deletedRecords = await Appointment.find({
         date_of_app: {
             $gte: start,
             $lte: end
         }
     })
-    return res.status(200).json(new ApiResponse(200, deletedRecords, "Last months appointments deleted successfully"))
+    return res.status(410).json(new ApiResponse(200, deletedRecords, "Last months appointments deleted successfully"));
 })
+
+// delete last 7 days appointments
+const deleteLastWeeeksAppointments = asyncHandler(async (req, res) => {
+    const today = new Date();
+    const endDate = new Date(today - 7 * 24 * 60 * 60 * 1000);
+    const startDate = new Date(endDate - 7 * 24 * 60 * 60 * 1000);
+
+    const deletedRecords = await Appointment.find({
+        date_of_app: {
+            $gte: endDate,
+            $lte: today
+        }
+    })
+    return res.status(410).json(new ApiResponse(200, deletedRecords, "Last seven days appointments deleted successfully",))
+})
+// delete a patient
+
+const deletePatient = asyncHandler(async (req, res) => {
+    const { patientId } = req.params;
+    if (!patientId) throw new ApiError(400, "Patient id required to delete");
+    // console.log(JSON.parse(patientId));
+    const deletedPatient = await Visited_Patient_Details.findByIdAndDelete(patientId);
+    if (!deletedPatient) throw new ApiError(404, "Patient not found");
+    console.log(deletedPatient)
+    return res.status(410).json(new ApiResponse(200, deletedPatient, "Patient deleted successfully"))
+})
+
 export {
     addAppointment,
     addPaymentDetails,
@@ -336,5 +375,7 @@ export {
     addReport,
     updateExistingPatientDetails,
     addNewPatientDetails,
-    deleteAppointments
+    deleteLastMonthsAppointments,
+    deletePatient,
+    deleteLastWeeeksAppointments
 }

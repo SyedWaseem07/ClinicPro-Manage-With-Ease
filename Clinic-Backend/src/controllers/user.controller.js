@@ -6,7 +6,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js"
 import { Visited_Patient_Details } from "../models/visited_patient_details.model.js"
 import { Appointment } from "../models/appointment.model.js"
 import { Bill_Info } from "../models/bill_info.model.js"
-
+import { v2 as cloudinary } from "cloudinary"
 // register user
 // post :- /api/v1/users/register
 const registerUser = asyncHandler(async (req, res) => {
@@ -152,6 +152,8 @@ const getCurrentUser = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200, req.user, "Current User details fetched successfully"));
 })
 
+
+
 const updateUserAvatar = asyncHandler(async (req, res) => {
     // frontend 
     // multer locally upload
@@ -161,6 +163,8 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 
     if (!localPath) return new ApiError(400, "Avatar is missing")
 
+    const userToUpdate = await User.findById(req.user._id);
+    await cloudinary.uploader.destroy(userToUpdate.avatar.split("/").pop().split(".")[0]);
     const avatar = await uploadOnCloudinary(localPath)
 
     if (!avatar.url) return new ApiError(400, "Error while uploading on cloudinary")
