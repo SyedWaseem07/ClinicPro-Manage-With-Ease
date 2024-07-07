@@ -1,6 +1,4 @@
 import React, { useEffect } from 'react'
-
-
 import axios from 'axios'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { usePatientsContext } from "../../context/PatientDetails.context"
@@ -14,11 +12,9 @@ const AllPatientsPage = ({ fromHome, fromSearch, fromUpdate }) => {
     queryKey: ['allPatients'],
     queryFn: async () => {
       try {
-        console.log("entered")
         const res = await axios.get('/api/v1/users/allPatientDetails');
         return res.data.data;
       } catch (error) {
-        console.log(error);
         return null;
       }
     }
@@ -29,8 +25,7 @@ const AllPatientsPage = ({ fromHome, fromSearch, fromUpdate }) => {
   }, [])
   useEffect(() => {
     if (isSuccess) {
-      console.log("Fetch success:", patients);
-      if (visitedPatients.length === 0) {
+      if (visitedPatients.length === 0 && patients) {
         setVisitedPatients(Array.from(patients));
         setUpdatePatientDetails(Array.from(patients));
       }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import LoginPage from './pages/LoginPage'
 import AllAppointmentsPage from './pages/common/AllAppointmentsPage'
 import AllPatientsPage from './pages/common/AllPatientsPage'
@@ -17,9 +17,12 @@ import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import PatientDetailsPage from './pages/common/PatientDetailsPage'
 import { usePatientsContext } from "./context/PatientDetails.context"
+import HomePage from './pages/HomePage'
 const App = () => {
   const [theme, setTheme] = useState('forest');
   const { visitedPatients, setVisitedPatients } = usePatientsContext();
+  const location = useLocation();
+
   const { data: authUser, isLoading } = useQuery({
     queryKey: ['authUser'],
     queryFn: async () => {
@@ -35,51 +38,50 @@ const App = () => {
     queryKey: ['allPatients'],
     queryFn: async () => {
       try {
-        console.log("entered")
         const res = await axios.get('/api/v1/users/allPatientDetails');
         return res.data.data;
       } catch (error) {
-        console.log(error);
         return null;
       }
     }
   })
   useEffect(() => {
-    if (isSuccess)
-      setVisitedPatients(Array.from(patients));
+    if (isSuccess && patients)
+      if (patients) setVisitedPatients(Array.from(patients));
   }, [isSuccess])
   return (
     <div className='flex w-full mb-10 md:mb-0' data-theme={theme}>
-      {authUser && <Navbar user={authUser} theme={theme} setTheme={setTheme} />}
+      {authUser && location.pathname !== '/' && <Navbar user={authUser} theme={theme} setTheme={setTheme} />}
       <Routes>
+        <Route path='/' element={<HomePage theme={theme} setTheme={setTheme} user={authUser} />} />
         <Route path='/login' element={!authUser ? <LoginPage /> : <Navigate to={`/user/${authUser.role}/`} />} />
         <Route path='user'>
           <Route path='receptionist' >
-            <Route path='' element={authUser && authUser.role === "receptionist" ? <AllAppointmentsPage /> : <Navigate to="/login" />} />
-            <Route path='updatePatient' element={authUser && authUser.role === "receptionist" ? <SearchPatient fromSearch={true} fromUpdate={true} /> : <Navigate to="/login" />} />
-            <Route path='addPatient/:name' element={authUser && authUser.role === "receptionist" ? <AddPatientDetails /> : <Navigate to="/login" />} />
-            <Route path='addAppointment' element={authUser && authUser.role === "receptionist" ? <AddAppointment /> : <Navigate to="/login" />} />
-            <Route path='update/:name' element={authUser && authUser.role === "receptionist" ? <UpdatePatientDetails /> : <Navigate to="/login" />} />
-            <Route path='patients' element={authUser && authUser.role === "receptionist" ? <AllPatientsPage fromHome={true} /> : <Navigate to="/login" />} />
-            <Route path='searchPatient' element={authUser ? <SearchPatient fromSearch={true} /> : <Navigate to="/login" />} />
-            <Route path='profile' element={authUser && authUser.role === "receptionist" ? <Profile /> : <Navigate to="/login" />} />
-            <Route path='changePassword' element={authUser && authUser.role === "receptionist" ? <ChangePassword /> : <Navigate to="/login" />} />
-            <Route path='patientInfo/:name/:fromSearch/:fromUpdate' element={authUser && authUser.role === "receptionist" ? <PatientDetailsPage /> : <Navigate to="/login" />} />
-            <Route path='patientInfo/:name/' element={authUser && authUser.role === "receptionist" ? <PatientDetailsPage /> : <Navigate to="/login" />} />
-            <Route path='patientInfo/:name/:fromSearch' element={authUser && authUser.role === "receptionist" ? <PatientDetailsPage /> : <Navigate to="/login" />} />
-            <Route path='patientInfo/:name/:fromUpdate' element={authUser && authUser.role === "receptionist" ? <PatientDetailsPage /> : <Navigate to="/login" />} />
+            <Route path='' element={authUser && authUser.role === "receptionist" ? <AllAppointmentsPage user={authUser} /> : <Navigate to="/" />} />
+            <Route path='updatePatient' element={authUser && authUser.role === "receptionist" ? <SearchPatient fromSearch={true} fromUpdate={true} /> : <Navigate to="/" />} />
+            <Route path='addPatient/:name' element={authUser && authUser.role === "receptionist" ? <AddPatientDetails /> : <Navigate to="/" />} />
+            <Route path='addAppointment' element={authUser && authUser.role === "receptionist" ? <AddAppointment /> : <Navigate to="/" />} />
+            <Route path='update/:name' element={authUser && authUser.role === "receptionist" ? <UpdatePatientDetails /> : <Navigate to="/" />} />
+            <Route path='patients' element={authUser && authUser.role === "receptionist" ? <AllPatientsPage fromHome={true} /> : <Navigate to="/" />} />
+            <Route path='searchPatient' element={authUser ? <SearchPatient fromSearch={true} /> : <Navigate to="/" />} />
+            <Route path='profile' element={authUser && authUser.role === "receptionist" ? <Profile /> : <Navigate to="/" />} />
+            <Route path='changePassword' element={authUser && authUser.role === "receptionist" ? <ChangePassword /> : <Navigate to="/" />} />
+            <Route path='patientInfo/:name/:fromSearch/:fromUpdate' element={authUser && authUser.role === "receptionist" ? <PatientDetailsPage /> : <Navigate to="/" />} />
+            <Route path='patientInfo/:name/' element={authUser && authUser.role === "receptionist" ? <PatientDetailsPage /> : <Navigate to="/" />} />
+            <Route path='patientInfo/:name/:fromSearch' element={authUser && authUser.role === "receptionist" ? <PatientDetailsPage /> : <Navigate to="/" />} />
+            <Route path='patientInfo/:name/:fromUpdate' element={authUser && authUser.role === "receptionist" ? <PatientDetailsPage /> : <Navigate to="/" />} />
           </Route>
           <Route path='doctor' >
-            <Route path='' element={authUser && authUser.role === "doctor" ? <Dashboard /> : <Navigate to="/login" />} />
-            <Route path='patients' element={authUser && authUser.role === "doctor" ? <AllPatientsPage fromHome={true} /> : <Navigate to="/login" />} />
-            <Route path='searchPatient' element={authUser && authUser.role === "doctor" ? <SearchPatient fromSearch={true} /> : <Navigate to="/login" />} />
-            <Route path='profile' element={authUser && authUser.role === "doctor" ? <Profile /> : <Navigate to="/login" />} />
-            <Route path='changePassword' element={authUser && authUser.role === "doctor" ? <ChangePassword /> : <Navigate to="/login" />} />
-            <Route path='appointments' element={authUser && authUser.role === "doctor" ? <AllAppointmentsPage /> : <Navigate to="/login" />} />
-            <Route path='patientInfo/:name/' element={authUser && authUser.role === "doctor" ? <PatientDetailsPage /> : <Navigate to="/login" />} />
-            <Route path='patientInfo/:name/:fromSearch' element={authUser && authUser.role === "doctor" ? <PatientDetailsPage /> : <Navigate to="/login" />} />
-            <Route path='patientInfo/:name/:fromUpdate' element={authUser && authUser.role === "doctor" ? <PatientDetailsPage /> : <Navigate to="/login" />} />
-            <Route path='profile' element={authUser && authUser.role === "doctor" ? <Profile /> : <Navigate to="/login" />} />
+            <Route path='' element={authUser && authUser.role === "doctor" ? <Dashboard /> : <Navigate to="/" />} />
+            <Route path='patients' element={authUser && authUser.role === "doctor" ? <AllPatientsPage fromHome={true} /> : <Navigate to="/" />} />
+            <Route path='searchPatient' element={authUser && authUser.role === "doctor" ? <SearchPatient fromSearch={true} /> : <Navigate to="/" />} />
+            <Route path='profile' element={authUser && authUser.role === "doctor" ? <Profile /> : <Navigate to="/" />} />
+            <Route path='changePassword' element={authUser && authUser.role === "doctor" ? <ChangePassword /> : <Navigate to="/" />} />
+            <Route path='appointments' element={authUser && authUser.role === "doctor" ? <AllAppointmentsPage user={authUser} /> : <Navigate to="/" />} />
+            <Route path='patientInfo/:name/' element={authUser && authUser.role === "doctor" ? <PatientDetailsPage /> : <Navigate to="/" />} />
+            <Route path='patientInfo/:name/:fromSearch' element={authUser && authUser.role === "doctor" ? <PatientDetailsPage /> : <Navigate to="/" />} />
+            <Route path='patientInfo/:name/:fromUpdate' element={authUser && authUser.role === "doctor" ? <PatientDetailsPage /> : <Navigate to="/" />} />
+            <Route path='profile' element={authUser && authUser.role === "doctor" ? <Profile /> : <Navigate to="/" />} />
           </Route>
         </Route>
 

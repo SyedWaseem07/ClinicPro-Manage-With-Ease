@@ -39,8 +39,6 @@ const AddPatientDetails = () => {
     queryKey: ['allAppointments'],
     queryFn: async () => {
       try {
-        console.log("called all")
-
         const res = await axios.get('/api/v1/users/appointments');
         return res.data.data;
       } catch (error) {
@@ -50,29 +48,29 @@ const AddPatientDetails = () => {
     }
   })
   useEffect(() => {
-    if (name !== null && allAppSuccess) {
+    if (name && allAppSuccess && allAppointments && allAppointments.length > 0) {
       let appPatientDetails = allAppointments.filter(app => app.patient_name === name);
-      setFormData({
-        "patient_name": appPatientDetails[0].patient_name,
-        "mobile_no": appPatientDetails[0].mobile_no,
-        "age": appPatientDetails[0].age,
-        "weight": 0,
-        "gender": appPatientDetails[0].gender,
-        "symptoms": "",
-        "last_visited": appPatientDetails[0].date_of_app
-      })
-      console.log(appPatientDetails);
+      if (appPatientDetails.length > 0) {
+        setFormData({
+          "patient_name": appPatientDetails[0].patient_name,
+          "mobile_no": appPatientDetails[0].mobile_no,
+          "age": appPatientDetails[0].age,
+          "weight": 0,
+          "gender": appPatientDetails[0].gender,
+          "symptoms": "",
+          "last_visited": appPatientDetails[0].date_of_app
+        })
+      }
+
     }
   }, [])
 
   const { mutate: step1Call, isPending: step1Loading } = useMutation({
     mutationFn: async (formData) => {
       try {
-        console.log("api call", { ...formData })
         const res = await axios.post('/api/v1/users/receptionist/addPatientDetails', { ...formData });
         return res.data.data;
       } catch (error) {
-        console.log(error)
         const index = error.response.data.indexOf("<pre>")
         const Lastindex = error.response.data.indexOf("<br>")
         const errMsg = error.response.data.substring(index + 5, Lastindex);
@@ -114,7 +112,6 @@ const AddPatientDetails = () => {
   const { mutate: addReportCall, isPending: reportLoading } = useMutation({
     mutationFn: async (report) => {
       try {
-        console.log("from api", report)
         const res = await axios.post('/api/v1/users/receptionist/addReport', report);
         return res.data.data;
       } catch (error) {
@@ -137,7 +134,6 @@ const AddPatientDetails = () => {
   const { mutate: addPaymentCall, isPending: paymentLoading } = useMutation({
     mutationFn: async (payment) => {
       try {
-        console.log(payment);
         const res = await axios.post('/api/v1/users/receptionist/addPaymentDetails', payment);
         return res.data.data;
       } catch (error) {

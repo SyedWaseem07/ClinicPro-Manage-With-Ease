@@ -15,11 +15,9 @@ const SearchPatient = ({ fromSearch, fromUpdate }) => {
     queryKey: ['searchPatients'],
     queryFn: async () => {
       try {
-        console.log("entered")
         const res = await axios.get('/api/v1/users/allPatientDetails');
         return res.data.data;
       } catch (error) {
-        console.log(error);
         return null;
       }
     }
@@ -33,7 +31,6 @@ const SearchPatient = ({ fromSearch, fromUpdate }) => {
     if (isSuccess && (filteredPatients.length === 0 || visitedPatients.length === 0)) {
       setVisitedPatients(Array.from(patients));
       setFilteredPatients(Array.from(patients))
-      console.log(filteredPatients)
     }
   }, [isSuccess])
 

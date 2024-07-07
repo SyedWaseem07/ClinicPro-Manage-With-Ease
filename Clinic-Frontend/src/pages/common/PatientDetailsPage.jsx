@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import { nanoid } from 'nanoid';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 const PatientDetailsPage = () => {
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const navigator = useNavigate();
   const { name, fromSearch, fromUpdate } = useParams();
-  console.log(name, fromSearch, fromUpdate)
-
   const { data: authUser } = useQuery({ queryKey: ['authUser'] })
   const { data: details, isSuccess } = useQuery({
     queryKey: ['singlePatient'],
@@ -19,6 +18,26 @@ const PatientDetailsPage = () => {
         toast.error(error.message);
         return null;
       }
+    }
+  })
+
+  const { mutate: deletePatient, isPending: deletePatientPedning } = useMutation({
+    mutationFn: async () => {
+      try {
+        const res = await axios.delete('/api/v1/users/receptionist/deleteLPatient');
+        return res.data.data;
+      } catch (error) {
+        const index = error.response.data.indexOf("<pre>")
+        const Lastindex = error.response.data.indexOf("<br>")
+        const errMsg = error.response.data.substring(index + 5, Lastindex);
+        throw new Error(errMsg);
+      }
+    },
+    onSuccess: () => {
+      toast.success("Patient deleted successfully");
+    },
+    onError: (error) => {
+      toast.error(error.message);
     }
   })
 
@@ -57,8 +76,12 @@ const PatientDetailsPage = () => {
     </div>
   </div >)
 
+  if (confirmDelete) {
+    setConfirmDelete(false);
+  }
+
   return (<div className='lg:w-[70%] mx-auto px-5 md:px-0 w-[100%] mt-7 font-semibold rounded-lg h-[94vh]'>
-    <button className="btn btn-primary absolute"
+    <button className="btn btn-primary md:absolute"
       onClick={() => {
         let url = '';
         if (fromSearch && fromUpdate) url = `/user/${authUser.role}/updatePatient`
@@ -67,12 +90,17 @@ const PatientDetailsPage = () => {
         navigator(url)
       }}
     >Back</button>
+    <button className="btn btn-error right-4 absolute"
+      onClick={() => {
+        document.getElementById('deleteDialogue').showModal();
+      }}
+      disabled={deletePatientPedning}
+    >Delete{deletePatientPedning && <span className="loading loading-spinner loading-sm text-primary-content"></span>}</button>
     <h3 className='my-4 text-2xl font-bold text-neutral-content text-center'>{fromSearch ? "Searched Patient Details" : "Visited Patient Details"}</h3>
     <div className='mockup-window bg-base-300 border border-neutral-300 w-[90%] mx-auto'>
-
       <div className="bg-base-200 px-4 pb-4  m bg-base text-gray-300">
         <h3 className="font-bold text-2xl text-center text-warning">{details.patient_name}</h3>
-        <div className='flex justify-between text-base my-4'>
+        <div className='grid-cols-4 md:flex md:justify-between text-base my-4'>
           <h5><span className='font-bold'>Mobile</span> - {details.mobile_no}</h5>
           <h5><span className='font-bold'>Age</span> - {details.age}</h5>
           <h5><span className='font-bold'>Weight</span> - {details.weight}</h5>
@@ -101,6 +129,18 @@ const PatientDetailsPage = () => {
         </div>
       </div>
     </div>
+    <dialog id="deleteDialogue" className="modal">
+      <div className="modal-box modal-top">
+        <h3 className="font-bold text-lg text-error">Confirm Delete</h3>
+        <p className="py-4">Are you sure you want to delete Last months appointments</p>
+        <div className="modal-action">
+          <form method="dialog" className='flex gap-2'>
+            <button className="btn btn-error" onClick={() => setConfirmDelete(true)}>Delete</button>
+            <button className="btn btn-primary">Close</button>
+          </form>
+        </div>
+      </div>
+    </dialog>
   </div>)
 }
 

@@ -27,7 +27,6 @@ const Profile = () => {
         const res = await axios.post('/api/v1/users/updateProfile', { ...formData });
         return res.data.data;
       } catch (error) {
-        console.log(error)
         const index = error.response.data.indexOf("<pre>")
         const Lastindex = error.response.data.indexOf("<br>")
         const errMsg = error.response.data.substring(index + 5, Lastindex);
@@ -39,7 +38,6 @@ const Profile = () => {
       queryClient.invalidateQueries({ queryKey: ['authUser'] });
     },
     onError: (error) => {
-      console.log(error)
       toast.error(error.message);
     }
   })
@@ -49,7 +47,6 @@ const Profile = () => {
         const res = await axios.post('/api/v1/users/changeAvatar', avatarData);
         return res.data.data;
       } catch (error) {
-        console.log(error)
         const index = error.response.data.indexOf("<pre>")
         const Lastindex = error.response.data.indexOf("<br>")
         const errMsg = error.response.data.substring(index + 5, Lastindex);
@@ -62,7 +59,6 @@ const Profile = () => {
       setShowSave(false)
     },
     onError: (error) => {
-      console.log(error)
       toast.error(error.message);
     }
   })
@@ -85,8 +81,6 @@ const Profile = () => {
       toast.error("Enter valid 10 digit mobile no");
       return;
     }
-
-    console.log(formData);
     mutate();
   }
 

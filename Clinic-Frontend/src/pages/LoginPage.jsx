@@ -4,6 +4,7 @@ import { useQueryClient, useMutation } from "@tanstack/react-query"
 import { toast } from "react-hot-toast"
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import Header from '../components/Header'
 const LoginPage = () => {
   const [formData, setFormData] = useState({
     "username": "",
@@ -25,7 +26,6 @@ const LoginPage = () => {
       }
     },
     onSuccess: (data) => {
-      console.log("Login success");
       toast.success("Login successful")
       queryClient.invalidateQueries({ queryKey: ['authUser'] })
     },
@@ -44,7 +44,8 @@ const LoginPage = () => {
   }
   return (
     <div className='w-full max-w-[1240px] mx-auto'>
-      <div className='flex flex-col md:flex-row justify-center h-screen items-center w-full gap-1 md:gap-10 '>
+      <Header />
+      <div className='flex flex-col md:flex-row justify-center items-center w-full gap-1 md:gap-10'>
         <img src={clinic} alt="" className="max-w-sm rounded-lg shadow-2xl h-48 md:h-96 bg-base" />
         <form className='flex flex-col gap-4 text-neutral-content py-8  px-14' onSubmit={handleSubmit}>
           <h1 className='text-4xl font-extrabold '>{"Let's"} go.</h1>
@@ -55,7 +56,7 @@ const LoginPage = () => {
               placeholder='username'
               name='username'
               value={formData.username}
-              onChange={handleChange}
+              onChange={handleChange} disabled={isPending}
             />
           </label>
 
@@ -66,7 +67,7 @@ const LoginPage = () => {
               placeholder='Password'
               name='password'
               value={formData.password}
-              onChange={handleChange}
+              onChange={handleChange} disabled={isPending}
             />
           </label>
           <div className='flex gap-2 cursor-pointer' id='radio1'
@@ -75,7 +76,7 @@ const LoginPage = () => {
               setFormData({ ...formData, "role": "doctor" })
             }}
           >
-            <input type="radio" name="radio-5" className="radio radio-success" />
+            <input type="radio" name="radio-5" className="radio radio-success" disabled={isPending} />
             <span>Doctor</span>
           </div>
           <div className='flex gap-2 cursor-pointer' id='radio2'
@@ -84,7 +85,7 @@ const LoginPage = () => {
               setFormData({ ...formData, "role": "receptionist" })
             }}
           >
-            <input type="radio" name="radio-5" className="radio radio-success" />
+            <input type="radio" name="radio-5" className="radio radio-success" disabled={isPending} />
             <span>Receptionist</span>
           </div>
 

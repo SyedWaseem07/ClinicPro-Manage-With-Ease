@@ -11,7 +11,6 @@ const TableRow = ({ patients, fromSearch, fromUpdate }) => {
   const { setUpdatePatientDetails } = useUpdatePatientsContext();
   const { data: authUser, isSuccess } = useQuery({ queryKey: ['authUser'] });
   const handleClick = (patient) => {
-    console.log("row", patient)
     let url = '';
     setUpdatePatientDetails(new Array(patient))
     if (fromSearch && fromUpdate) url = `/user/receptionist/update/${patient.patient_name}`

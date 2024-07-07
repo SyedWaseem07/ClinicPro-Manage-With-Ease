@@ -34,7 +34,6 @@ const ChangePassword = () => {
   }, [])
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
     const passwordRegex = /^(?=.*[A-Z])(?=.*\W).{6,}$/;
 
     if (!passwordRegex.test(formData.newPassword)) {

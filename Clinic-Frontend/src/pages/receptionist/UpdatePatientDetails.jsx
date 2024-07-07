@@ -38,8 +38,6 @@ const UpdatePatientDetails = () => {
     queryKey: ['allAppointments'],
     queryFn: async () => {
       try {
-        console.log("called all")
-
         const res = await axios.get('/api/v1/users/appointments');
         return res.data.data;
       } catch (error) {
@@ -60,13 +58,11 @@ const UpdatePatientDetails = () => {
         "symptoms": "",
         "last_visited": appPatientDetails[0].date_of_app
       })
-      console.log(appPatientDetails);
     }
   }, [])
   const { mutate: step1Call, isPending: step1Loading } = useMutation({
     mutationFn: async (formData) => {
       try {
-        console.log("api call", { ...formData })
         const res = await axios.post('/api/v1/users/receptionist/updatePatientDetails', { ...formData });
         return res.data.data;
       } catch (error) {
@@ -103,7 +99,6 @@ const UpdatePatientDetails = () => {
   const { mutate: addReportCall, isPending: reportLoading } = useMutation({
     mutationFn: async (report) => {
       try {
-        console.log("from api", report)
         const res = await axios.post('/api/v1/users/receptionist/addReport', report);
         return res.data.data;
       } catch (error) {

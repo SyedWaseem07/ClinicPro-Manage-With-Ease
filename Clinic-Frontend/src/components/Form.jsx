@@ -15,10 +15,8 @@ const Form = ({ formData, setFormData, fromUpdatePatient, medicine, setMedicine,
   const [reportFile, setReportFile] = useState(null);
   const [diseases, setDiseases] = useState([]);
   const { name } = useParams();
-  console.log(name)
   const { updatePatientDetails, setUpdatePatientDetails } = useUpdatePatientsContext();
   const { visitedPatientDetails } = usePatientsContext();
-  console.log(updatePatientDetails)
   let patientToUpdate = updatePatientDetails.filter(patient => patient.patient_name === name)[0];
   useEffect(() => {
     if (patientToUpdate) {
@@ -52,7 +50,6 @@ const Form = ({ formData, setFormData, fromUpdatePatient, medicine, setMedicine,
       return;
     }
     let symp = diseases.join(",")
-    console.log(symp)
     if (symp !== "") setFormData({ ...formData, "symptoms": symp })
     step1Call({ ...formData, "symptoms": symp });
     setShowSymptoms('');
@@ -322,9 +319,7 @@ const Form = ({ formData, setFormData, fromUpdatePatient, medicine, setMedicine,
                     type="file"
                     className="file-input file-input-bordered file-input-warning w-full max-w-xs hidden"
                     onChange={(e) => {
-                      console.log(e.target.files[0])
                       setReportFile(e.target.files[0]);
-                      console.log(reportFile)
                     }}
                   />
                   <FaPlusCircle className='cursor-pointer' size={18} />
