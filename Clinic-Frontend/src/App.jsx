@@ -38,8 +38,11 @@ const App = () => {
     queryKey: ['allPatients'],
     queryFn: async () => {
       try {
-        const res = await axios.get('/api/v1/users/allPatientDetails');
-        return res.data.data;
+        if (authUser) {
+          const res = await axios.get('/api/v1/users/allPatientDetails');
+          return res.data.data;
+        }
+        return null
       } catch (error) {
         return null;
       }

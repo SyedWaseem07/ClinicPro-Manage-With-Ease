@@ -4,8 +4,7 @@ import { GrLinkedin } from "react-icons/gr";
 import { SiLeetcode } from "react-icons/si";
 const Footer = ({ theme }) => {
   return (
-    <footer className={`footer ${theme === "forest" ? "text-neutral-400" : "text-neutral-700"} px-5 pt-5 pb-3`}>
-
+    <footer className={`footer text-neutral-500 px-5 pt-5 pb-3`}>
       <aside>
         <svg
           width="50"

@@ -31,7 +31,6 @@ const Header = ({ theme, setTheme, user }) => {
         <div className='flex gap-4 z-[9999] items-center'>
           {user ? <NavLink to={`/user/${user.role}`}><button className='btn btn-primary hidden md:block'>{user.role.charAt(0).toUpperCase() + user.role.substring(1) + "'s Home"}</button></NavLink> : <NavLink to="/login"><button className='btn btn-primary hidden md:block'>Login</button></NavLink>}
           <label className="swap swap-rotate">
-            {/* this hidden checkbox controls the state */}
             <input type="checkbox" className="theme-controller" value={theme} onClick={() => setTheme(theme === "forest" ? "wireframe" : "forest")} />
 
             {/* sun icon */}
@@ -89,7 +88,10 @@ const Header = ({ theme, setTheme, user }) => {
         <dialog id="doctorModal" className="modal">
           <div className="modal-box">
             <h3 className="font-bold text-lg">Doctor's Functionalities</h3>
-            <p className="py-4">Press ESC key or click the button below to close</p>
+            <p className="py-2">📊 Dashboard to see patient count, revenue, Average appointments (all daily, weekly, monthly in real time)</p>
+            <p className="py-2">🔍 Searching functionality of patients.</p>
+            <p className="py-2">👤 Details of single patient including medicine, reports, payment, last visited.</p>
+            <p className="py-2">📅 Remaining appointment status.</p>
             <div className="modal-action">
               <form method="dialog">
                 {/* if there is a button in form, it will close the modal */}
@@ -101,7 +103,15 @@ const Header = ({ theme, setTheme, user }) => {
         <dialog id="receptionistModal" className="modal">
           <div className="modal-box">
             <h3 className="font-bold text-lg">Receptionist's Functionalities</h3>
-            <p className="py-4">Press ESC key or click the button below to close</p>
+            <p className="py-2">➕ Add appointment.</p>
+            <p className="py-2">📝 Add patient details from appointments; auto-delete appointment after addition.</p>
+            <p className="py-2">🔄 Update details of existing patients.</p>
+            <p className="py-2">❌ Delete medicine by name for the same patient during addition.</p>
+            <p className="py-2">📄 Add/delete report and payment.</p>
+            <p className="py-2">🔍 Search patients.</p>
+            <p className="py-2">👤 Own profile: Update profile, change password, change avatar.</p>
+            <p className="py-2">📅 View all appointments.</p>
+
             <div className="modal-action">
               <form method="dialog">
                 {/* if there is a button in form, it will close the modal */}
@@ -113,7 +123,15 @@ const Header = ({ theme, setTheme, user }) => {
         <dialog id="featuresModal" className="modal">
           <div className="modal-box">
             <h3 className="font-bold text-lg">ClinicPro Features</h3>
-            <p className="py-4">Press ESC key or click the button below to close</p>
+            <p className='py-2'>🔓 Login without entering credentials.</p>
+            <p className='py-2'>🌗 Dual theme UI.</p>
+            <p className='py-2'>🖥️ User-friendly dynamic UI with loaders, spinners, etc.</p>
+            <p className='py-2'>🔄 Skeleton loading for every component.</p>
+            <p className='py-2'>⚡ API calls with React Query (caching, invalidation).</p>
+            <p className='py-2'>✅ Form validation (login to appointment, patient, payment, report, medicine).</p>
+            <p className='py-2'>👨‍⚕️👩‍💼 Dynamic UI for doctor and receptionist.</p>
+            <p className='py-2'>🔐 Strong authentication and rock-solid authorization.</p>
+
             <div className="modal-action">
               <form method="dialog">
                 <button className="btn">Close</button>
@@ -124,7 +142,83 @@ const Header = ({ theme, setTheme, user }) => {
         <dialog id="techStackModal" className="modal">
           <div className="modal-box">
             <h3 className="font-bold text-lg">ClinicPro Tech Stack</h3>
-            <p className="py-4">Press ESC key or click the button below to close</p>
+            <ol class="list-decimal ml-6 space-y-2">
+              <li class="font-bold">Frontend:
+                <ul class="list-disc ml-6 space-y-1">
+                  <li class="flex items-center">
+                    <img src="https://img.icons8.com/plasticine/30/000000/react.png" class="w-5 h-5 mr-2" />
+                    <span>React.js</span>
+                  </li>
+                  <li class="flex items-center">
+                    <img src="https://img.icons8.com/color/30/000000/tailwindcss.png" class="w-5 h-5 mr-2" />
+                    <span>Tailwind CSS</span>
+                  </li>
+                  <li class="flex items-center">
+                    <img src="https://raw.githubusercontent.com/saadeghi/daisyui-images/master/images/daisyui-logo/favicon-192.png" class="w-5 h-5 mr-2" />
+                    <span>Daisy UI (Tailwind component library)</span>
+                  </li>
+                </ul>
+              </li>
+              <li class="font-bold">Backend:
+                <ul class="list-disc ml-6 space-y-1">
+                  <li class="flex items-center">
+                    <img src="https://img.icons8.com/color/30/000000/nodejs.png" class="w-5 h-5 mr-2" />
+                    <span>Node.js</span>
+                  </li>
+                  <li class="flex items-center">
+                    <img src="https://img.icons8.com/color/30/000000/express.png" class="w-5 h-5 mr-2" />
+                    <span>Express.js</span>
+                  </li>
+                  <li class="flex items-center">
+                    <img src="https://repository-images.githubusercontent.com/139898859/9617c480-81c2-11ea-94fc-322231ead1f0" class="w-5 h-5 mr-2" />
+                    <span>bcrypt.js</span>
+                  </li>
+                  <li class="flex items-center">
+                    <img src="https://tinyurl.com/5vms33kb" class="w-5 h-5 mr-2" />
+                    <span>Swagger Docs</span>
+                  </li>
+                </ul>
+              </li>
+              <li class="font-bold">Database:
+                <ul class="list-disc ml-6 space-y-1">
+                  <li class="flex items-center">
+                    <img src="https://img.icons8.com/color/30/000000/mongodb.png" class="w-5 h-5 mr-2" />
+                    <span>MongoDB</span>
+                  </li>
+                  <li class="flex items-center">
+                    <img src="https://media.licdn.com/dms/image/D4D12AQEk8opKsyHhRQ/article-cover_image-shrink_720_1280/0/1693917399837?e=2147483647&v=beta&t=6LPN-E9p8k_59NMv17edpwj8ofRzcXd_vlmlFoc1fLw" class="w-5 h-5 mr-2" />
+                    <span>Mongoose (ORM)</span>
+                  </li>
+                </ul>
+              </li>
+              <li class="font-bold">Third-party Tools/Libraries:
+                <ul class="list-disc ml-6 space-y-1">
+                  <li class="flex items-center">
+                    <img src="https://cdn.worldvectorlogo.com/logos/jwt-3.svg" class="w-5 h-5 mr-2" />
+                    <span>JWT</span>
+                  </li>
+                  <li class="flex items-center">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6Ya3EBDdD49IMTC6bTFmL2R5kK2Fr9fUQzw&s" class="w-5 h-5 mr-2" />
+                    <span>Cloudinary</span>
+                  </li>
+                  <li class="flex items-center">
+                    <img src="https://seeklogo.com/images/R/react-query-logo-1340EA4CE9-seeklogo.com.png" class="w-5 h-5 mr-2" />
+                    <span>Tanstack React-Query</span>
+                  </li>
+                  <li class="flex items-center">
+                    <img src="https://miro.medium.com/v2/resize:fit:1000/0*SMpS9j8KEimJrx39.png" class="w-5 h-5 mr-2" />
+                    <span>Axios</span>
+                  </li>
+                  <li class="flex items-center">
+                    <img src="https://img.stackshare.io/service/40157/default_ac6bddce398a038cb30e3dfd23eaab10c84cfc78.jpg" class="w-5 h-5 mr-2" />
+                    <span>React hot toast</span>
+                  </li>
+                </ul>
+              </li>
+            </ol>
+
+
+
             <div className="modal-action">
               <form method="dialog">
                 {/* if there is a button in form, it will close the modal */}

@@ -100,7 +100,7 @@ const HomePage = ({ theme, setTheme, user }) => {
           </div>
         </div>
       </div>
-      <div className="divider divider-neutral -my-2"></div>
+      <div className="divider divider-neutral md:-my-2 mt-16"></div>
       <Footer />
     </div >
   )
