@@ -41,7 +41,6 @@ const addAppointment = asyncHandler(async (req, res) => {
 // Post :- /api/v1/users/receptionist/addPatientDetails
 const addNewPatientDetails = asyncHandler(async (req, res) => {
     let { patient_name, mobile_no, age, weight, gender, symptoms, last_visited } = req.body;
-    console.log(patient_name, mobile_no, age, weight, gender, symptoms, last_visited)
     if (!patient_name || !mobile_no || !age || !weight || !gender || !symptoms || !last_visited)
         throw new ApiError(400, "All feilds are required");
 
@@ -145,7 +144,6 @@ const updateExistingPatientDetails = asyncHandler(async (req, res) => {
     let { patient_name, mobile_no, age, weight, symptoms, last_visited } = req.body;
     if (!patient_name || !mobile_no || !age || !weight || !symptoms || !last_visited)
         throw new ApiError(400, "All feilds are required");
-    console.log("entered controller");
     last_visited = new Date(last_visited);
 
     const patientDetails = await Visited_Patient_Details.findOneAndUpdate(
@@ -253,14 +251,7 @@ const addMedicine = asyncHandler(async (req, res) => {
     if (!patient_name || !medicine_name || !dosage)
         throw new ApiError(400, "All feilds are required");
 
-    let existingMedicine = await Medicine.findOne({
-        $and: [{ patient_name }, { medicine_name }, { dosage }]
-    })
-
-    if (existingMedicine)
-        return res.status(201).json(new ApiResponse(200, existingMedicine, "Medicine Added Successfully"))
-
-    const deletedMedicine = await Medicine.find({
+    const deletedMedicine = await Medicine.deleteMany({
         "patient_name": patient_name
     })
     const medicine = await Medicine.create({
@@ -278,10 +269,9 @@ const addReport = asyncHandler(async (req, res) => {
     const { patient_name, report_name } = req.body;
     if (!patient_name || !report_name)
         throw new ApiError(400, "All feilds are required");
-    console.log(req.files);
     if (!req.file?.path) throw new ApiError(400, "Report file required");
 
-    const deletedReports = await Report.find({
+    const deletedReports = await Report.deleteMany({
         "patient_name": patient_name,
         "report_name": report_name
     })
@@ -333,13 +323,13 @@ const deleteLastMonthsAppointments = asyncHandler(async (req, res) => {
         if (end.getFullYear() % 4 === 0) previousDate = new Date(end - 28 * 24 * 60 * 60 * 1000);
         else start = new Date(end - 27 * 24 * 60 * 60 * 1000);
     }
-    const deletedRecords = await Appointment.find({
+    const deletedRecords = await Appointment.deleteMany({
         date_of_app: {
             $gte: start,
             $lte: end
         }
     })
-    return res.status(410).json(new ApiResponse(200, deletedRecords, "Last months appointments deleted successfully"));
+    return res.status(200).json(new ApiResponse(200, deletedRecords, "Last months appointments deleted successfully"));
 })
 
 // delete last 7 days appointments
@@ -348,24 +338,22 @@ const deleteLastWeeeksAppointments = asyncHandler(async (req, res) => {
     const endDate = new Date(today - 7 * 24 * 60 * 60 * 1000);
     const startDate = new Date(endDate - 7 * 24 * 60 * 60 * 1000);
 
-    const deletedRecords = await Appointment.find({
+    const deletedRecords = await Appointment.deleteMany({
         date_of_app: {
             $gte: endDate,
             $lte: today
         }
     })
-    return res.status(410).json(new ApiResponse(200, deletedRecords, "Last seven days appointments deleted successfully",))
+    return res.status(200).json(new ApiResponse(200, deletedRecords, "Last seven days appointments deleted successfully",))
 })
 // delete a patient
 
 const deletePatient = asyncHandler(async (req, res) => {
     const { patientId } = req.params;
     if (!patientId) throw new ApiError(400, "Patient id required to delete");
-    // console.log(JSON.parse(patientId));
     const deletedPatient = await Visited_Patient_Details.findByIdAndDelete(patientId);
     if (!deletedPatient) throw new ApiError(404, "Patient not found");
-    console.log(deletedPatient)
-    return res.status(410).json(new ApiResponse(200, deletedPatient, "Patient deleted successfully"))
+    return res.status(200).json(new ApiResponse(200, deletedPatient, "Patient deleted successfully"))
 })
 
 export {
