@@ -6,7 +6,8 @@ import {
     addReport, addNewPatientDetails, updateExistingPatientDetails,
     deleteLastMonthsAppointments,
     deletePatient,
-    deleteLastWeeeksAppointments
+    deleteLastWeeeksAppointments,
+    deleteSingleAppointment
 } from "../controllers/receptionist.controller.js"
 import { upload } from "../middlewares/multer.middleware.js"
 
@@ -22,5 +23,6 @@ router.route("/updatePatientDetails").post(verifyJWT, verifyReceptionist, update
 router.route("/deleteLastMonthAppointments").delete(verifyJWT, verifyReceptionist, deleteLastMonthsAppointments);
 router.route("/deleteLastWeekAppointments").delete(verifyJWT, verifyReceptionist, deleteLastWeeeksAppointments);
 router.route("/deletePatient/:patientId").delete(verifyJWT, verifyReceptionist, deletePatient);
+router.route("/deleteAppointment/:id").delete(verifyJWT, verifyReceptionist, deleteSingleAppointment);
 
 export default router;

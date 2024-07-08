@@ -251,8 +251,18 @@ const addMedicine = asyncHandler(async (req, res) => {
     if (!patient_name || !medicine_name || !dosage)
         throw new ApiError(400, "All feilds are required");
 
+    // Get the current date
+    const today = new Date();
+
+    // Set the time of today to the start of the day (midnight)
+    const startOfToday = new Date(today);
+    startOfToday.setHours(0, 0, 0, 0);
+
     const deletedMedicine = await Medicine.deleteMany({
-        "patient_name": patient_name
+        "patient_name": patient_name,
+        "createdAt": {
+            $lt: startOfToday
+        }
     })
     const medicine = await Medicine.create({
         patient_name, medicine_name, dosage
@@ -260,7 +270,7 @@ const addMedicine = asyncHandler(async (req, res) => {
 
     if (!medicine) throw new ApiError(500, "Unable to store medicine");
 
-    return res.status(201).json(new ApiResponse(200, { "Added": medicine, "deleted": deletedMedicine }, "Medicine Added Successfully"))
+    return res.status(201).json(new ApiResponse(200, { "Added": {}, "deleted": deletedMedicine }, "Medicine Added Successfully"))
 })
 
 // add report details
@@ -356,6 +366,11 @@ const deletePatient = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200, deletedPatient, "Patient deleted successfully"))
 })
 
+const deleteSingleAppointment = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const app = await Appointment.findByIdAndDelete(id);
+    return res.status(200).json(new ApiResponse(200, app, "Appointment deleted"));
+})
 export {
     addAppointment,
     addPaymentDetails,
@@ -365,5 +380,6 @@ export {
     addNewPatientDetails,
     deleteLastMonthsAppointments,
     deletePatient,
-    deleteLastWeeeksAppointments
+    deleteLastWeeeksAppointments,
+    deleteSingleAppointment
 }
