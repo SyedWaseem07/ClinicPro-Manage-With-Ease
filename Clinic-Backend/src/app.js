@@ -60,8 +60,8 @@ app.get('/generate-yml', async (req, res) => {
         console.log(err)
     }
 });
-app.get('/', (req, res) => {
-    res.send("Welcome to backend of clinic management system developed by --Syed Waseem(Code Surgery Squad)");
-})
+// app.get('/', (req, res) => {
+//     res.send("Welcome to backend of clinic management system developed by --Syed Waseem(Code Surgery Squad)");
+// })
 export { app }
 
