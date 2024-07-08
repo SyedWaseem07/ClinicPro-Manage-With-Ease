@@ -15,12 +15,15 @@ import Dashboard from './pages/doctor/Dashboard'
 import { Toaster } from 'react-hot-toast'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
+import toast from "react-hot-toast"
 import PatientDetailsPage from './pages/common/PatientDetailsPage'
 import { usePatientsContext } from "./context/PatientDetails.context"
+import { useTotalAppointmentsContext } from "./context/TotalAppointments.context"
 import HomePage from './pages/HomePage'
 const App = () => {
   const [theme, setTheme] = useState('forest');
   const { visitedPatients, setVisitedPatients } = usePatientsContext();
+  const { totalApps, setTotalApps, appLeft, setappLeft } = useTotalAppointmentsContext()
   const location = useLocation();
 
   const { data: authUser, isLoading } = useQuery({
@@ -48,12 +51,30 @@ const App = () => {
       }
     }
   })
+
+  const { data: todaysAppointments, isSuccess: dailyAppSuccess, refetch: todayReftech, isRefetchError: todaysRefetchError } = useQuery({
+    queryKey: ['todaysAppointments'],
+    queryFn: async () => {
+      try {
+        const res = await axios.get('/api/v1/users/dailyAppointments');
+        return res.data.data;
+      } catch (error) {
+        toast.error("unable to fetch Todays Appointments")
+        return [];
+      }
+    }
+  })
   useEffect(() => {
     if (isSuccess && patients)
       if (patients) setVisitedPatients(Array.from(patients));
-  }, [isSuccess])
+    if (dailyAppSuccess && todaysAppointments)
+      if (todaysAppointments) {
+        setTotalApps(Array.from(todaysAppointments).length);
+        setappLeft(Array.from(todaysAppointments).length);
+      }
+  }, [isSuccess, dailyAppSuccess])
   return (
-    <div className='flex w-full mb-10 md:mb-0' data-theme={theme}>
+    <div className='flex w-full md:mb-0' data-theme={theme}>
       {authUser && location.pathname !== '/' && <Navbar user={authUser} theme={theme} setTheme={setTheme} />}
       <Routes>
         <Route path='/' element={<HomePage theme={theme} setTheme={setTheme} user={authUser} />} />
@@ -75,7 +96,7 @@ const App = () => {
             <Route path='patientInfo/:name/:fromUpdate' element={authUser && authUser.role === "receptionist" ? <PatientDetailsPage /> : <Navigate to="/" />} />
           </Route>
           <Route path='doctor' >
-            <Route path='' element={authUser && authUser.role === "doctor" ? <Dashboard /> : <Navigate to="/" />} />
+            <Route path='' element={authUser && authUser.role === "doctor" ? <Dashboard user={authUser} /> : <Navigate to="/" />} />
             <Route path='patients' element={authUser && authUser.role === "doctor" ? <AllPatientsPage fromHome={true} /> : <Navigate to="/" />} />
             <Route path='searchPatient' element={authUser && authUser.role === "doctor" ? <SearchPatient fromSearch={true} /> : <Navigate to="/" />} />
             <Route path='profile' element={authUser && authUser.role === "doctor" ? <Profile /> : <Navigate to="/" />} />

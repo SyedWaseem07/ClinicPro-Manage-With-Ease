@@ -2,7 +2,8 @@ import React from 'react'
 import { GrGithub } from "react-icons/gr";
 import { GrLinkedin } from "react-icons/gr";
 import { SiLeetcode } from "react-icons/si";
-const Footer = ({ theme }) => {
+
+const Footer = () => {
   return (
     <footer className={`footer text-neutral-500 px-5 pt-5 pb-3`}>
       <aside>

@@ -1,8 +1,9 @@
-// create context
 import { createContext, useContext, useState } from "react"
 
+// create context
 export const UpdatePatientContext = createContext(null);
 
+// Provide context
 export const UpdatePatientContextProvider = (props) => {
   const [updatePatientDetails, setUpdatePatientDetails] = useState([]);
   return (
@@ -12,7 +13,7 @@ export const UpdatePatientContextProvider = (props) => {
   )
 }
 
-
+// Export Custom hook
 export const useUpdatePatientsContext = () => {
   const value = useContext(UpdatePatientContext);
   return value;

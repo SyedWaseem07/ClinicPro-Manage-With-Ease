@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import AllPatientsPage from './AllPatientsPage'
-import { allPatientDetails } from "../../../dummyData"
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+
+import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
+
 import { usePatientsContext } from '../../context/PatientDetails.context';
 import { useSearchedPatientsContext } from '../../context/searchedPatients.context';
-import axios from 'axios';
-import toast from 'react-hot-toast';
+
+import AllPatientsPage from './AllPatientsPage'
 
 const SearchPatient = ({ fromSearch, fromUpdate }) => {
-  const [patientName, setPatientName] = useState('');
-  const { filteredPatients, setFilteredPatients } = useSearchedPatientsContext();
-  const { visitedPatients, setVisitedPatients } = usePatientsContext();
-  const { data: patients, isLoading, isSuccess, refetch, isRefetching } = useQuery({
+
+  const { data: patients, isSuccess, refetch } = useQuery({
     queryKey: ['searchPatients'],
     queryFn: async () => {
       try {
@@ -23,24 +22,27 @@ const SearchPatient = ({ fromSearch, fromUpdate }) => {
     }
   })
 
+  const [patientName, setPatientName] = useState('');
+  const { filteredPatients, setFilteredPatients } = useSearchedPatientsContext();
+  const { visitedPatients, setVisitedPatients } = usePatientsContext();
+
   useEffect(() => {
     refetch();
   }, [])
 
   useEffect(() => {
-    if (isSuccess && (filteredPatients.length === 0 || visitedPatients.length === 0)) {
+    if (isSuccess) {
       setVisitedPatients(Array.from(patients));
-      setFilteredPatients(Array.from(patients))
+      setFilteredPatients(Array.from(patients));
     }
   }, [isSuccess])
-
 
   const searchFunction = (e) => {
     setFilteredPatients(visitedPatients.filter(patient => patient.patient_name.toLowerCase().includes(e.target.value.toLowerCase())))
   }
 
   return (
-    <div className='lg:w-[70%] mx-auto px-5 md:px-0 w-[100%] mt-7 font-semibold text-neutral-content'>
+    <div className='lg:w-[70%] mx-auto px-5 md:px-0 w-full mt-7 font-semibold text-neutral-content mb-20'>
       <h3 className='my-4 text-2xl font-bold text-neutral-content text-center'>Search Patient</h3>
       <div className="mockup-browser bg-base-300 border">
         <div className="mockup-browser-toolbar my-4">
@@ -53,15 +55,13 @@ const SearchPatient = ({ fromSearch, fromUpdate }) => {
               }}
             />
           </div>
-
         </div>
-        <div className="bg-base-200 flex justify-center px-4 py-16">
+        <div className="bg-base-200 flex justify-center md:px-4 py-16">
           {
             filteredPatients.length > 0 ?
               <AllPatientsPage fromSearch={fromSearch} fromUpdate={fromUpdate} /> :
               <h3 className='my-4 text-2xl font-bold text-neutral-content text-center'> Patient Not Found!!</h3>
           }
-
         </div>
       </div>
     </div>

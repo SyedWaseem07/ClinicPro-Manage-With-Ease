@@ -1,14 +1,11 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
+import axios from 'axios'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+
 const ChangePassword = () => {
-  const [formData, setFormData] = useState({
-    oldPassword: "",
-    newPassword: "",
-  })
-  const queryClient = useQueryClient();
+
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
       try {
@@ -29,23 +26,27 @@ const ChangePassword = () => {
       toast.error(error.message);
     }
   })
-  useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: ['authUser'] });
-  }, [])
+
+  const [formData, setFormData] = useState({
+    oldPassword: "",
+    newPassword: "",
+  })
+  const queryClient = useQueryClient();
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const passwordRegex = /^(?=.*[A-Z])(?=.*\W).{6,}$/;
-
     if (!passwordRegex.test(formData.newPassword)) {
       toast.error("New Password must be at least 6 characters, with at least one uppercase letter and one special character")
       return;
     }
-
     mutate();
   }
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
+
   return (
     <div className='lg:w-[70%] mx-auto px-5 md:px-0 w-[100%] mt-7 font-semibold'>
       <h3 className='my-2 text-2xl font-bold text-neutral-content text-center'>Change Password</h3>

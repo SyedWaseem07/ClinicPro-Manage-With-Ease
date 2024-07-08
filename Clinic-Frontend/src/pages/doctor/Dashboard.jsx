@@ -1,13 +1,18 @@
 import React, { useEffect } from 'react'
+import toast from "react-hot-toast"
+
 import { RiMoneyRupeeCircleLine } from "react-icons/ri";
-import { GiPayMoney } from "react-icons/gi";
 import { GiReceiveMoney } from "react-icons/gi";
 import { FiUserPlus } from "react-icons/fi";
 import { MdOutlinePostAdd } from "react-icons/md";
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+
 import axios from "axios"
-import toast from "react-hot-toast"
-const Dashboard = () => {
+import { useQuery } from "@tanstack/react-query"
+
+import { useTotalAppointmentsContext } from '../../context/TotalAppointments.context';
+
+const Dashboard = ({ user }) => {
+
   const { data: revenue, isSuccess: isRevenueSuccess, refetch: revenueRefetch } = useQuery({
     queryKey: ['revenueInfo'],
     queryFn: async () => {
@@ -44,6 +49,9 @@ const Dashboard = () => {
       }
     }
   })
+
+  const { totalApps, appLeft } = useTotalAppointmentsContext();
+
   useEffect(() => {
     revenueRefetch();
     patientRefetch();
@@ -133,6 +141,7 @@ const Dashboard = () => {
       </div>
     </div>
   </div>)
+
   return (
     <div className='lg:w-[70%] px-5 pb-10 md:px-0 w-full  mx-auto mt-7 font-semibold mb-8 md:mb-0'>
       <h3 className='my-2 text-2xl font-bold text-neutral-content text-center'>Clinic Statistics</h3>
@@ -168,6 +177,7 @@ const Dashboard = () => {
             </div>
           </div>}
         </div>
+
         <div className="divider divider-neutral"></div>
 
         <div className='flex flex-col w-full mx-auto'>
@@ -185,17 +195,18 @@ const Dashboard = () => {
               <div className="stat-figure text-secondary" >
                 <div className="avatar online">
                   <div className="w-16 rounded-full">
-                    <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                    <img src={user.avatar} />
                   </div>
                 </div>
               </div>
-              <div className="stat-value">86%</div>
-              <div className="stat-title">Tasks done</div>
-              <div className="stat-desc text-secondary">31 tasks remaining</div>
+              <div className="stat-value">{totalApps === 0 ? 0 : Math.floor(((totalApps - appLeft) / totalApps) * 100)}%</div>
+              <div className="stat-title">Appointments done</div>
+              <div className="stat-desc text-secondary">{appLeft} Appointments remaining</div>
             </div >
 
           </div>}
         </div>
+
         <div className="divider divider-neutral"></div>
 
         <div className='flex flex-col'>

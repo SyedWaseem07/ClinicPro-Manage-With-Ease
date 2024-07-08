@@ -1,4 +1,7 @@
 import React, { useState } from 'react'
+import { NavLink, useNavigate } from 'react-router-dom';
+import { toast } from "react-hot-toast"
+
 import LogoWhite from "../assets/LogoWhite.gif"
 import LogoDark from "../assets/LogoDark.gif"
 import { MdOutlineDashboard } from "react-icons/md";
@@ -11,14 +14,12 @@ import { FaUserDoctor } from "react-icons/fa6";
 import { FaHospitalUser } from "react-icons/fa6";
 import { FaAngleDown } from "react-icons/fa6";
 import { MdFormatListBulleted } from "react-icons/md";
-import { NavLink, useNavigate } from 'react-router-dom';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from "react-hot-toast"
+
 import axios from 'axios';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
 const Navbar = ({ user, theme, setTheme }) => {
-  const navigator = useNavigate();
-  const [checked, setChecked] = useState(false);
-  const queryClient = useQueryClient();
+
   const { mutate, isLoading } = useMutation({
     mutationFn: async () => {
       try {
@@ -40,15 +41,18 @@ const Navbar = ({ user, theme, setTheme }) => {
     }
   })
 
+  const navigator = useNavigate();
+  const [checked, setChecked] = useState(false);
+  const queryClient = useQueryClient();
+
   const handleLogoSubmit = () => {
+    setChecked(false)
     if (user.role === "doctor") navigator('/user/doctor')
     else navigator('/user/receptionist')
   }
   const handleLogout = () => {
     mutate();
   }
-
-
 
   return (
     <>
@@ -63,8 +67,6 @@ const Navbar = ({ user, theme, setTheme }) => {
             {theme === "forest" ? <img src={LogoDark} alt="dark Logo" className='md:h-[12.5rem] h-32 mx-auto md:mt-2 md:ml-4 cursor-pointer' onClick={handleLogoSubmit} /> : <img src={LogoWhite} alt="light Logo" className='md:h-[12.5rem] h-32 mx-auto md:mt-2 md:ml-4 cursor-pointer' onClick={handleLogoSubmit} />}
           </div>
           <ul className="menu text-base-content w-80 px-4">
-
-
             {user.role === "doctor" ? (<>
               <NavLink to="/user/doctor/"><li className='hover:bg-neutral rounded-full'><a><MdOutlineDashboard /> Dashboard</a></li></NavLink>
               <NavLink to="/user/doctor/appointments"><li className='hover:bg-neutral rounded-full'><a><CiMemoPad /> Appointments</a></li></NavLink>
@@ -78,7 +80,6 @@ const Navbar = ({ user, theme, setTheme }) => {
               <NavLink to="/user/receptionist/updatePatient"><li className='hover:bg-neutral rounded-full'><a><MdPersonAddAlt /> Update Patient</a></li></NavLink>
               <NavLink to="/user/receptionist/addAppointment"><li className='hover:bg-neutral rounded-full'><a><MdOutlinePostAdd /> Add Appointment</a></li></NavLink>
             </>)}
-
             <li><label className="flex cursor-pointer gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -124,7 +125,6 @@ const Navbar = ({ user, theme, setTheme }) => {
               <NavLink to={`/user/${user.role}/profile`}><li className='hover:bg-neutral rounded-full'><a>Profile</a></li></NavLink>
               <li className='hover:bg-neutral rounded-full' onClick={handleLogout} aria-disabled={isLoading}><a>Logout</a></li>
             </ul>
-
           </details>
         </div >
       </div >
@@ -162,7 +162,6 @@ const Navbar = ({ user, theme, setTheme }) => {
             <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
             {/* Mobile nav links */}
             <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
-              {/* Sidebar content here */}
               {theme === "forest" ? <img src={LogoDark} alt="dark Logo" className='h-64  mx-auto md:mt-2 md:ml-4 cursor-pointer' onClick={handleLogoSubmit} /> : <img src={LogoWhite} alt="light Logo" className='h-64 mx-auto md:mt-2 md:ml-4 cursor-pointer' onClick={handleLogoSubmit} />}
               {user.role === "doctor" ? (<>
                 <NavLink to="/user/doctor/" onClick={() => setChecked(false)}><li className='hover:bg-neutral rounded-full'><a><MdOutlineDashboard /> Dashboard</a></li></NavLink>
@@ -194,7 +193,10 @@ const Navbar = ({ user, theme, setTheme }) => {
                 </svg>
                 <input type="checkbox" value={theme} className="toggle 
               theme-controller"
-                  onClick={(e) => setTheme(theme === "forest" ? "wireframe" : "forest")}
+                  onClick={(e) => {
+                    setTheme(theme === "forest" ? "wireframe" : "forest")
+                    setChecked(false)
+                  }}
                 />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -210,6 +212,7 @@ const Navbar = ({ user, theme, setTheme }) => {
                 </svg>
               </label></li>
               <NavLink to="/"><button className='btn btn-primary'>Back to Home</button></NavLink>
+              <button className='btn btn-primary mt-2 w-[44%]' onClick={() => setChecked(false)}>Close</button>
             </ul>
             {/* Profile, logout dropdowwn */}
             <button className="text-success dropdown" id='profile'
@@ -230,12 +233,9 @@ const Navbar = ({ user, theme, setTheme }) => {
               </details>
             </button>
           </div>
-
         </div>
       </div>
-
     </>
-
   )
 }
 

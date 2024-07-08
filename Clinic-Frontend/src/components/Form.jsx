@@ -1,23 +1,27 @@
 import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import toast from 'react-hot-toast';
+
 import { FaPlusCircle } from "react-icons/fa";
 import { IoArrowRedoCircle } from "react-icons/io5";
 import { RiDeleteBin2Line } from "react-icons/ri";
+
 import { useUpdatePatientsContext } from "../context/UpdatePatient.context"
-import { useParams } from 'react-router-dom'
-import toast from 'react-hot-toast';
+import { usePatientsContext } from '../context/PatientDetails.context';
+
 import validateInput from '../hooks/validateInput';
 import { validateString } from '../hooks/validateInput';
-import { usePatientsContext } from '../context/PatientDetails.context';
-let loader = true;
-const Form = ({ formData, setFormData, fromUpdatePatient, medicine, setMedicine, report, setReport, payment, setPayment, step1Call, step1Loading, addMedicineCall, medicineLoading, addReportCall, reportLoading, firstTime, setFirstTime, addPaymentCall, paymentLoading, step1Submit, step2Submit }) => {
-  const [showSymptoms, setShowSymptoms] = useState('');
 
+const Form = ({ formData, setFormData, fromUpdatePatient, medicine, setMedicine, report, setReport, payment, setPayment, step1Call, step1Loading, addMedicineCall, medicineLoading, addReportCall, reportLoading, firstTime, setFirstTime, addPaymentCall, paymentLoading, step1Submit, step2Submit }) => {
+
+  const [showSymptoms, setShowSymptoms] = useState('');
   const [reportFile, setReportFile] = useState(null);
   const [diseases, setDiseases] = useState([]);
   const { name } = useParams();
-  const { updatePatientDetails, setUpdatePatientDetails } = useUpdatePatientsContext();
-  const { visitedPatientDetails } = usePatientsContext();
+
+  const { updatePatientDetails } = useUpdatePatientsContext();
   let patientToUpdate = updatePatientDetails.filter(patient => patient.patient_name === name)[0];
+
   useEffect(() => {
     if (patientToUpdate) {
       setFormData({
@@ -32,6 +36,7 @@ const Form = ({ formData, setFormData, fromUpdatePatient, medicine, setMedicine,
       setFirstTime(false);
     }
   }, [])
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateInput(formData.patient_name, formData.mobile_no, formData.age) !== 0) {
@@ -54,10 +59,12 @@ const Form = ({ formData, setFormData, fromUpdatePatient, medicine, setMedicine,
     step1Call({ ...formData, "symptoms": symp });
     setShowSymptoms('');
   };
+
   const handleChange = (e) => {
     if (e.target.name === "symptoms") setFormData({ ...formData, "symptoms": e.target.value })
     else setFormData({ ...formData, [e.target.name]: e.target.value })
   }
+
   const addSymptoms = (oneSymptom) => {
     if (diseases.includes(oneSymptom.toLowerCase())) {
       toast.error('symptom already added');
@@ -70,6 +77,7 @@ const Form = ({ formData, setFormData, fromUpdatePatient, medicine, setMedicine,
     diseases.forEach(item => str += item + ' ');
     setShowSymptoms(str);
   }
+
   const addSymptomPlus = () => {
     if (formData.symptoms === '') {
       toast.error('Cant add empty symptom');
@@ -82,7 +90,6 @@ const Form = ({ formData, setFormData, fromUpdatePatient, medicine, setMedicine,
     diseases.forEach(item => str += item + ' ');
     setShowSymptoms(str);
   }
-
 
   const handleMedicine = (e) => {
     e.preventDefault();
@@ -112,15 +119,15 @@ const Form = ({ formData, setFormData, fromUpdatePatient, medicine, setMedicine,
     setPayment({ ...payment, "patient_name": formData.patient_name })
     addPaymentCall({ ...payment, "patient_name": formData.patient_name });
   }
-  return (
-    <div className='lg:w-[70%] mx-auto px-5 md:px-0 w-[100%] mt-7 font-semibold'>
-      {fromUpdatePatient ? <h3 className='my-2 text-2xl font-bold text-neutral-content text-center'>Update Patient Details</h3> : <h3 className='my-2 text-2xl font-bold text-neutral-content text-center'>Add Patient Details</h3>}
 
+  return (
+    <div className='lg:w-[70%] mx-auto px-5 md:px-0 w-[100%] my-7 font-semibold'>
+      {fromUpdatePatient ? <h3 className='my-2 text-2xl font-bold text-neutral-content text-center'>Update Patient Details</h3> : <h3 className='my-2 text-2xl font-bold text-neutral-content text-center'>Add Patient Details</h3>}
       <div className="collapse collapse-plus bg-neutral text-neutral-content mt-4">
         <input type="radio" name="my-accordion-3" defaultChecked />
         <div className="collapse-title text-xl font-medium">Step-1 {fromUpdatePatient ? "Update" : "Add"} Identity Details</div>
-        <div className="collapse-content">
-          <form className='flex flex-col gap-4 text-neutral-content py-8 px-14 ' onSubmit={handleSubmit}>
+        <div className="collapse-content mx-auto">
+          <form className='flex flex-col gap-4 text-neutral-content py-8 md:px-14' onSubmit={handleSubmit}>
             <div className='flex flex-col lg:flex-row justify-evenly flex-wrap gap-4'>
               <div className='flex flex-col gap-4 mt-4 lg:mt-0'>
                 <label className='input input-bordered rounded flex items-center gap-1'>
@@ -254,15 +261,12 @@ const Form = ({ formData, setFormData, fromUpdatePatient, medicine, setMedicine,
           </form>
         </div>
       </div>
-
-
       <div className="collapse collapse-plus bg-neutral my-4">
         <input type="radio" name="my-accordion-3" />
         <div className="collapse-title text-xl font-medium">Step-2 Add Prescriptions</div>
         <div className="collapse-content">
-          {step1Submit ? <h3 className='text-neutral-content font-semibold text-center'>Prescriptions of patient <span className='border-2 border-warning px-4 py-1'>{formData.patient_name}</span></h3> : <h3 className='text-neutral-content font-semibold text-center'>Please fill step-1 first</h3>}
-          {/* <form  onSubmit={handleStep2}> */}
-          {(step1Submit || fromUpdatePatient) ? <div className={`flex flex-col gap-4 text-neutral-content py-8 px-14  md:flex-row justify-evenly`}>
+          {step1Submit || fromUpdatePatient ? <h3 className='text-neutral-content font-semibold text-center'>Prescriptions of patient <span className='border-2 border-warning px-4 py-1'>{formData.patient_name}</span></h3> : <h3 className='text-neutral-content font-semibold text-center'>Please fill step-1 first</h3>}
+          {(step1Submit || fromUpdatePatient) ? <div className={`flex flex-col gap-4 text-neutral-content py-8 md:px-14  md:flex-row justify-evenly`}>
             <form className='flex flex-col gap-4 text-neutral-content' onSubmit={handleMedicine}>
               <div className='flex flex-col gap-4'>
                 <label className='input input-bordered rounded flex items-center gap-1'>
@@ -329,8 +333,6 @@ const Form = ({ formData, setFormData, fromUpdatePatient, medicine, setMedicine,
             </form>
           </div> : <></>}
 
-
-          {/* </form> */}
         </div>
       </div>
 
@@ -340,7 +342,7 @@ const Form = ({ formData, setFormData, fromUpdatePatient, medicine, setMedicine,
         <div className="collapse-title text-xl font-medium">Step-3 Add Payment Details</div>
         <div className="collapse-content">
           {((step1Submit && step2Submit) || (fromUpdatePatient && step2Submit)) ? <h3 className='text-neutral-content font-semibold text-center'>Prescriptions of patient <span className='border-2 border-warning px-4 py-1'>{formData.patient_name}</span></h3> : <h3 className='text-neutral-content font-semibold text-center'>Please fill above steps first</h3>}
-          {((step1Submit && step2Submit) || (fromUpdatePatient && step2Submit)) ? <form className='flex flex-col gap-4 text-neutral-content py-8 px-14 w-[80%] md:w-[50%] mx-auto' onSubmit={handlePayment}>
+          {((step1Submit && step2Submit) || (fromUpdatePatient && step2Submit)) ? <form className='flex flex-col gap-4 text-neutral-content py-8 md:px-14 w-[80%] md:w-[50%] mx-auto' onSubmit={handlePayment}>
             <label className='input input-bordered rounded flex items-center gap-2'>
               <input
                 type='number'

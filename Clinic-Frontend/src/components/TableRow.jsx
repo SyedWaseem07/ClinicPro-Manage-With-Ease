@@ -1,15 +1,20 @@
+import React from 'react'
+import { useNavigate } from 'react-router-dom';
 
 import { nanoid } from 'nanoid';
-import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom';
-import { useSearchedPatientsContext } from "../context/searchedPatients.context"
 import { useQuery } from "@tanstack/react-query"
+
+import { useSearchedPatientsContext } from "../context/searchedPatients.context"
 import { useUpdatePatientsContext } from '../context/UpdatePatient.context';
+
 const TableRow = ({ patients, fromSearch, fromUpdate }) => {
+
+  const { data: authUser } = useQuery({ queryKey: ['authUser'] });
+
   const navigator = useNavigate();
   const { filteredPatients } = useSearchedPatientsContext();
   const { setUpdatePatientDetails } = useUpdatePatientsContext();
-  const { data: authUser, isSuccess } = useQuery({ queryKey: ['authUser'] });
+
   const handleClick = (patient) => {
     let url = '';
     setUpdatePatientDetails(new Array(patient))
@@ -18,7 +23,6 @@ const TableRow = ({ patients, fromSearch, fromUpdate }) => {
     else url = `/user/${authUser.role}/patientInfo/${patient.patient_name}`
     navigator(url)
   }
-
 
   return (<>
     {

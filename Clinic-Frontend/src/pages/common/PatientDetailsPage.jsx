@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
-import { nanoid } from 'nanoid';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import toast from "react-hot-toast"
+
 import axios from 'axios';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+
 const PatientDetailsPage = () => {
-  const [confirmDelete, setConfirmDelete] = useState(false);
-  const navigator = useNavigate();
-  const { name, fromSearch, fromUpdate } = useParams();
+
   const { data: authUser } = useQuery({ queryKey: ['authUser'] })
+
   const { data: details, isSuccess } = useQuery({
     queryKey: ['singlePatient'],
     queryFn: async () => {
@@ -21,10 +22,12 @@ const PatientDetailsPage = () => {
     }
   })
 
+  const queryClient = useQueryClient();
   const { mutate: deletePatient, isPending: deletePatientPedning } = useMutation({
     mutationFn: async () => {
       try {
-        const res = await axios.delete('/api/v1/users/receptionist/deleteLPatient');
+        console.log(details)
+        const res = await axios.delete(`/api/v1/users/receptionist/deletePatient/${details._id}`);
         return res.data.data;
       } catch (error) {
         const index = error.response.data.indexOf("<pre>")
@@ -35,11 +38,27 @@ const PatientDetailsPage = () => {
     },
     onSuccess: () => {
       toast.success("Patient deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ['allPatients'] })
+      queryClient.invalidateQueries({ queryKey: ['searchPatients'] })
+      let url = '';
+      if (fromSearch && fromUpdate) url = `/user/${authUser.role}/updatePatient`
+      else if (fromSearch) url = `/user/${authUser.role}/searchPatient`
+      else url = `/user/${authUser.role}/patients`
+      navigator(url)
     },
     onError: (error) => {
       toast.error(error.message);
     }
   })
+
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const navigator = useNavigate();
+  const { name, fromSearch, fromUpdate } = useParams();
+
+  if (confirmDelete) {
+    deletePatient();
+    setConfirmDelete(false);
+  }
 
   if (!isSuccess) return (<div className='skeleton bg-black lg:w-[70%] mx-auto px-5 md:px-0 w-[100%] mt-7 font-semibold rounded-lg'>
     <div className="skeleton bg-[#28282B] absolute w-16 h-9"
@@ -76,11 +95,8 @@ const PatientDetailsPage = () => {
     </div>
   </div >)
 
-  if (confirmDelete) {
-    setConfirmDelete(false);
-  }
-
-  return (<div className='lg:w-[70%] mx-auto px-5 md:px-0 w-[100%] mt-7 font-semibold rounded-lg h-[94vh]'>
+  return (<div className='lg:w-[70%] mx-auto px-5 md:px-0 w-[100%] mt-7 font-semibold rounded-lg  mb-20 min-h-[89vh]
+  '>
     <button className="btn btn-primary md:absolute"
       onClick={() => {
         let url = '';
@@ -90,14 +106,14 @@ const PatientDetailsPage = () => {
         navigator(url)
       }}
     >Back</button>
-    <button className="btn btn-error right-4 absolute"
+    {authUser && authUser.role === "receptionist" && <button className="btn btn-error right-4 absolute"
       onClick={() => {
         document.getElementById('deleteDialogue').showModal();
       }}
       disabled={deletePatientPedning}
-    >Delete{deletePatientPedning && <span className="loading loading-spinner loading-sm text-primary-content"></span>}</button>
+    >Delete{deletePatientPedning && <span className="loading loading-spinner loading-sm text-primary-content"></span>}</button>}
     <h3 className='my-4 text-2xl font-bold text-neutral-content text-center'>{fromSearch ? "Searched Patient Details" : "Visited Patient Details"}</h3>
-    <div className='mockup-window bg-base-300 border border-neutral-300 w-[90%] mx-auto'>
+    {details && <div className='mockup-window bg-base-300 border border-neutral-300 w-[90%] mx-auto'>
       <div className="bg-base-200 px-4 pb-4  m bg-base text-gray-300">
         <h3 className="font-bold text-2xl text-center text-warning">{details.patient_name}</h3>
         <div className='grid-cols-4 md:flex md:justify-between text-base my-4'>
@@ -128,11 +144,11 @@ const PatientDetailsPage = () => {
           ))}
         </div>
       </div>
-    </div>
+    </div>}
     <dialog id="deleteDialogue" className="modal">
       <div className="modal-box modal-top">
         <h3 className="font-bold text-lg text-error">Confirm Delete</h3>
-        <p className="py-4">Are you sure you want to delete Last months appointments</p>
+        <p className="py-4">Are you sure you want to delete this patient</p>
         <div className="modal-action">
           <form method="dialog" className='flex gap-2'>
             <button className="btn btn-error" onClick={() => setConfirmDelete(true)}>Delete</button>

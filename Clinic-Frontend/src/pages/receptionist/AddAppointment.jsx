@@ -1,19 +1,12 @@
 import React, { useState } from 'react'
-import { FaPlusCircle } from "react-icons/fa";
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import axios from "axios"
 import toast from "react-hot-toast"
+
+import axios from "axios"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+
 import validateInput from "../../hooks/validateInput"
+
 const AddAppointment = () => {
-  const [formData, setFormData] = useState({
-    "patient_name": "",
-    "mobile_no": "",
-    "age": 0,
-    "gender": "",
-    "date_of_app": "",
-    "time_of_app": ""
-  })
-  const queryClient = useQueryClient();
   const { mutate, isPending } = useMutation({
     mutationFn: async (data) => {
       try {
@@ -44,6 +37,17 @@ const AddAppointment = () => {
       toast.error(error.message);
     }
   })
+
+  const queryClient = useQueryClient();
+  const [formData, setFormData] = useState({
+    "patient_name": "",
+    "mobile_no": "",
+    "age": 0,
+    "gender": "",
+    "date_of_app": "",
+    "time_of_app": ""
+  })
+
   function compareDates(dateString) {
     // Parse the input date string into a Date object
     const inputDate = new Date(dateString);
@@ -112,6 +116,7 @@ const AddAppointment = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   };
+
   return (
     <div className='lg:w-[70%] mx-auto px-5 md:px-0 w-[100%] mt-7 font-semibold'>
       <h3 className='my-2 text-2xl font-bold text-neutral-content text-center'>Add Appointment</h3>
@@ -119,7 +124,7 @@ const AddAppointment = () => {
         <input type="radio" name="my-accordion-3" defaultChecked />
         <div className="collapse-title text-xl font-medium">Add</div>
         <div className="collapse-content">
-          <form className='flex flex-col gap-4 text-neutral-content py-8 px-14 ' onSubmit={handleSubmit}>
+          <form className='flex flex-col gap-4 text-neutral-content py-8 md:px-14 mb-12' onSubmit={handleSubmit}>
             <div className='flex flex-col lg:flex-row justify-evenly flex-wrap gap-4'>
               <div className='flex flex-col gap-4 mt-4 lg:mt-0'>
                 <label className='input input-bordered rounded flex items-center gap-1'>
@@ -201,8 +206,6 @@ const AddAppointment = () => {
                   />
                 </label>
               </div>
-
-
             </div>
             <button className='btn rounded-full btn-primary text-primary-content font-semibold text-[1.2rem] w-52 mx-auto mt-4 py-1' disabled={isPending}>Add{isPending && <span className="loading loading-spinner loading-sm text-primary-content"></span>}</button>
           </form>
