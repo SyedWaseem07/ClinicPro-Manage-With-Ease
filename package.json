@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon Clinic-Backend/src/index.js",
     "start": "cross-env NODE_ENV=production node Clinic-Backend/src/index.js",
-    "build": "npm install && npm install --prefix clinic-frontend && npm run build --prefix clinic-frontend"
+    "build": "npm install && npm install --prefix Clinic-Frontend && npm run build --prefix Clinic-frontend"
   },
   "keywords": [
     "Node",
