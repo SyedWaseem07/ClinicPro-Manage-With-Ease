@@ -2,12 +2,12 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "Backend of clinic management system",
-  "main": "\\",
+  "main": "Clinic-Backend/src/index.js",
   "type": "module",
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon Clinic-Backend/src/index.js",
     "start": "cross-env NODE_ENV=production node Clinic-Backend/src/index.js",
-    "build": "npm install && npm install --prefix Clinic-Frontend && npm run build --prefix Clinic-frontend"
+    "build": "npm install && npm install --prefix Clinic-Frontend && npm run build --prefix Clinic-Frontend"
   },
   "keywords": [
     "Node",
