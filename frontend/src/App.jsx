@@ -5,7 +5,6 @@ import AllAppointmentsPage from './pages/common/AllAppointmentsPage'
 import AllPatientsPage from './pages/common/AllPatientsPage'
 import Navbar from './components/Navbar'
 import SearchPatient from './pages/common/SearchPatient'
-import { allPatientDetails } from "../dummyData"
 import Profile from './pages/common/Profile'
 import ChangePassword from './pages/common/ChangePassword'
 import AddPatientDetails from './pages/receptionist/AddPatientDetails'
