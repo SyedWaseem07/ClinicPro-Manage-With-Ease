@@ -1,13 +1,12 @@
 {
-  "name": "clinicpro",
+  "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon backend/index.js",
-    "start": "cross-env NODE_ENV=production node backend/index.js",
-    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
+    "dev": "nodemon -r dotenv/config --experimental-json-modules server.js",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",

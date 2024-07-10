@@ -1,4 +1,4 @@
-import path from "path";
+import path, { dirname } from "path";
 import dotenv from "dotenv"
 import { app } from "./app.js"
 import connectToDb from "./db/index.js"
@@ -6,7 +6,6 @@ import express from "express"
 
 dotenv.config()
 const __dirname = path.resolve();
-
 
 if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, "/frontend/dist")));

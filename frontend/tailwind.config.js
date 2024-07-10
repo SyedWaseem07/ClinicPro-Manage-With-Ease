@@ -7,11 +7,8 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [
-    require('daisyui'),
-  ],
+  plugins: [require('daisyui')],
   daisyui: {
-    themes: ["forest", "wireframe"],
-  },
+    themes: ["forest", "wireframe", "cupcake"]
+  }
 }
-
