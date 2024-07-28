@@ -132,9 +132,9 @@ The Clinic Management System, named **ClinicPro**, is a comprehensive web applic
 
 ### Screenshots of UI 
 
-- Home page
-![Home](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/af9e428e-daa2-4af3-af86-f186ceda8d09)
-![Home2](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/1a02c0a7-b7fc-4239-953f-dbd3a98c2482)
+- Landing page
+![Dark theme](https://github.com/SyedWaseem07/ClinicPro-Manage-with-Ease/blob/main/frontend/src/assets/LandingDark.PNG)
+![Light theme](https://github.com/SyedWaseem07/ClinicPro-Manage-with-Ease/blob/main/frontend/src/assets/LandingWhite.PNG)
 
 - Home page after user login
 ![Home After Login](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/07661302-a165-49cd-b8e5-daeab7ecbc3a)
