@@ -1,42 +1,68 @@
-# Blogify Hub - Where Ideas Thrive
+# 🏥 Clinic Management System
 
-Welcome to Blogify Hub! This is a simple and powerful blogging platform that allows you to create and share your thoughts with the world. This repository contains the source code for a simple and customizable blog app. The app is designed to allow users to create, edit, and delete blog posts, as well as browse through existing posts. It provides a user-friendly interface for managing blog content.
+## Project Overview
 
-## Features
+The Clinic Management System, named **ClinicPro**, is a comprehensive web application designed & developed to streamline and effieciently manage the operations of a home clinic. The system facilitates efficient handling of patient information, appointments, medicines, reports, and payments. It leverages the power of MongoDB for database management, Mongoose for data modeling, and various modern web technologies for the front-end and back-end development.
 
-- **User Authentication:** Securely sign up and log in to start managing your own blog.
+## ✨ Features
 
-- **Create and Edit Posts:** Write and edit your blog posts with an easy-to-use editor.
+1. **🔓 Login without entering credentials.**
+2. **🌗 Dual theme UI.**
+3. **🖥️ User-friendly dynamic UI with loaders, spinners, etc.**
+4. **🔄 Skeleton loading for every component.**
+5. **⚡ API calls with React Query (caching, invalidation).**
+6. **✅ Form validation (login to appointment, patient, payment, report, medicine).**
+7. **👨‍⚕️👩‍💼 Dynamic UI for doctor and receptionist.**
+8. **🔐 Strong authentication and rock-solid authorization.**
 
-- **Categories and Tags:** Organize your content by adding categories and tags to your posts.
+## 👨‍⚕️👩‍💼 Doctor's Functionalities
 
-- **Responsive Design:** Enjoy a seamless experience across devices - desktop, tablet, and mobile.
+1. **📊 Dashboard to see patient count, revenue, average appointments (all daily, weekly, monthly in real time).**
+2. **🔍 Searching functionality of patients.**
+3. **👤 Details of single patient including medicine, reports, payment, last visited.**
+4. **📅 Remaining appointment status.**
 
-## Technologies Used
+## 👩‍💼 Receptionist's Functionalities
 
-- **React.js**: Used for frontend ui implementation of the app.
-- **Node.js**: Backend runtime environment.
-- **Express.js**: Web application framework for Node.js.
-- **MongoDB**: NoSQL database for data storage.
-- **JWT**: JSON Web Tokens for authentication.
-- **bcrypt**: for hashing the password of users.
-- **Cookie-Parser**: for accessing and setting cookies in user's browser securely.
-- **Multer**: for storing all the files uploaded on app in our local server.
-- **Cloudinary**: for uploading all files from local server to cloudinary cloud.
+1. **➕ Add appointment.**
+2. **📝 Add patient details from appointments; auto-delete appointment after addition.**
+3. **🔄 Update details of existing patients.**
+4. **❌ Delete medicine by name for the same patient during addition.**
+5. **📄 Add/delete report and payment.**
+6. **🔍 Search patients.**
+7. **👤 Own profile: Update profile, change password, change avatar.**
+8. **📅 View all appointments.**
 
-## Usage
+## 🛠️ ClinicPro Tech Stack
 
-- Sign up for an account or log in if you already have one.
-- Create a new post and start writing your content.
-- Save and publish your post to make it visible to others.
-- Explore other posts on the platform, and engage with the community.
-  
-## Getting Started
+### Frontend
+- ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+- ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+- ![Daisy UI](https://img.shields.io/badge/Daisy_UI-FFBDBD?style=for-the-badge&logo=daisyui&logoColor=white)
+
+### Backend
+- ![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node-dot-js&logoColor=white)
+- ![Express.js](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge)
+- ![bcrypt.js](https://img.shields.io/badge/bcrypt.js-007ACC?style=for-the-badge&logo=javascript&logoColor=white)
+- ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=white)
+
+### Database
+- ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
+- ![Mongoose](https://img.shields.io/badge/Mongoose-880000?style=for-the-badge&logo=mongoose&logoColor=white)
+
+### Third-party Tools/Libraries
+- ![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)
+- ![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white)
+- ![Tanstack React-Query](https://img.shields.io/badge/React_Query-FF4154?style=for-the-badge&logo=react-query&logoColor=white)
+- ![Axios](https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white)
+- ![React Hot Toast](https://img.shields.io/badge/React_Hot_Toast-00D8FF?style=for-the-badge&logo=react&logoColor=white)
+
+## 🚀 Getting Started
 
 ### Prerequisites
 
 - Node.js and npm installed
-- MongoDB installed and running
+- MongoDB installed and running (or use cloud deployed cluster).
 - React.js and vite installed and running
 
   - #### Installation
@@ -44,21 +70,21 @@ Welcome to Blogify Hub! This is a simple and powerful blogging platform that all
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/syedwasee07/blogify-hub.git
-    cd blogify-hub.git
+    git clone https://github.com/syedwasee07/ClinicPro-Manage-with-Ease.git
+    cd ClinicPro-Manage-with-Ease.git
     ```
 
 2. Install server dependencies:
 
     ```bash
-    cd server
+    cd backend
     npm install
     ```
 
 3. Install client dependencies:
 
     ```bash
-    cd client
+    cd frontend
     npm install
     ```
 
@@ -85,7 +111,7 @@ Welcome to Blogify Hub! This is a simple and powerful blogging platform that all
 1. Start the server:
 
     ```bash
-    cd server
+    cd backend
     npm run dev
     ```
 
@@ -94,15 +120,15 @@ Welcome to Blogify Hub! This is a simple and powerful blogging platform that all
 2. Start the client:
 
     ```bash
-    cd client
+    cd frontend
     npm run dev
     ```
 
    The client will run on http://127.0.0.1:5173/.
 
-3. Open your browser and visit  http://127.0.0.1:5173/ to access the blog application.
+3. Open your browser and visit  http://127.0.0.1:5173/ to access the ClinicPro.
 
-## Frontend of BLOGIFYHUB - Where Ideas Thrive.
+## Frontend of ClinicPro - Manage with Ease.
 
 ### Screenshots of UI 
 
@@ -115,87 +141,3 @@ Welcome to Blogify Hub! This is a simple and powerful blogging platform that all
 
 - Authors page
 ![Authors](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/44ff6337-7e36-4d92-9fb6-83f09769f9ed)
-
-- Authors Post page
-![authorpostpage](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/9cb71926-4263-4a48-8dfa-6948e3302094)
-
-- Login page
-![Login](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/8ebc8ac1-c35f-4840-b9f8-f6b01b5e2920)
-
-- Register page
-![Register](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/f6c66c45-3bb4-437b-ba85-95f99c7f6109)
-
-- User Profile page
-![UserProfile](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/eae871eb-281f-4aee-be07-5947fc84d0b3)
-
-- User Dashboard page
-![UserDashboard](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/897e3fec-3d0e-470f-aa7c-f20ef8c248df)
-
-- Blog details page
-![Blogdetail page](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/a809d3e9-bbe9-4e79-bb4a-b91e73e28bd9)
-![Blogdetail page2](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/43dd3966-d442-475e-9138-4cd7c2cabc19)
-
-- Create Post page
-![createpost page](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/38eb9fb4-78a9-4f9f-bf71-a361adb5ea6e)
-
-- Edit Post page
-![edit post page](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/4457f95b-c2ab-4f19-933f-befc20959154)
-
-- Post page by Category
-![postbycategorypage](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/8239b4c1-2493-44c0-b683-ad794db3085b)
-
-## Backend of BLOGIFYHUB - Where Ideas Thrive.
-
-### API Documentation
-
-- All api are tested using Postman and api documentation is also published using Postman, link is below
-- **Link:** https://documenter.getpostman.com/view/32463080/2s9Yytg1Ae
-
-### Screenshots of API testing via postman
-
-#### Users API's
-- Get all authors API
-![Screenshot1](https://github.com/SyedWaseem07/Blogify-Hub-Backend/assets/125558233/1e1e2fc6-5931-4301-95be-e26729121419)
-
-- Register User API
-![Screenshot2](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/0a326c27-a81e-429f-b0d7-e2c65d611b6d)
-
-- Login User API
-![Screenshot3](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/f705fb68-0edf-487a-9571-dc4dd9fe7f30)
-
-- Logout User API
-![Screenshot4](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/29d44b33-68fe-4b90-b35b-53b6f1acc2e8)
-
-- Change User Avatar API
-![Screenshot5](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/d51fc9fd-5d85-451f-a622-6f658ebff90f)
-
-- Update User Profile API
-![Screenshot6](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/12ab8d5c-c1a0-428d-acfb-1957c960a86b)
-
-- Get User Profile API
-![Screenshot7](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/e599dd34-29a1-4377-b264-3af8df6ca03e)
-
-### Posts API's
-
-- Get all post API
-![Screenshot8](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/ece7ab18-ff4e-402b-a36c-ca19d5e48ab0)
-
-- Create post API
-![Screenshot9](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/23f06a31-678e-4845-b40e-986d9826f4df)
-
-- Get single post API
-![Screenshot10](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/fd9081a8-0583-42f9-a990-a7c5733f1665)
-
-- Edit single post API
-![Screenshot11](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/0afea078-af44-483d-ac5c-5e66ba3b7c22)
-
-- Delete single post API
-![Screenshot12](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/0b71f942-78ce-45f2-a334-bb312cecd5d2)
-
-- Get posts by Category API
-![Screenshot13](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/ddb74022-73e4-4bdc-8d7e-b7a6584022fd)
-
-- Get posts by Author API
-![Screenshot14](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/582e2b30-6612-4c84-912c-70e3dfae83fb)
-
-## The End
