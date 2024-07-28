@@ -1,8 +1,12 @@
-# 🏥 Clinic Management System
+# 🏥 ClinicPro - Manage with Ease (Home Clinic Management System).
 
 ## Project Overview
 
 The Clinic Management System, named **ClinicPro**, is a comprehensive web application designed & developed to streamline and effieciently manage the operations of a home clinic. The system facilitates efficient handling of patient information, appointments, medicines, reports, and payments. It leverages the power of MongoDB for database management, Mongoose for data modeling, and various modern web technologies for the front-end and back-end development.
+
+## Deployement Links
+- **Live Site:** https://swaseem-clinicpro.onrender.com/
+- **Backend API Docs:** https://swaseem-clinic-backend.onrender.com/api-docs/
 
 ## ✨ Features
 
@@ -136,8 +140,29 @@ The Clinic Management System, named **ClinicPro**, is a comprehensive web applic
 ![Dark theme](https://github.com/SyedWaseem07/ClinicPro-Manage-with-Ease/blob/main/frontend/src/assets/LandingDark.PNG)
 ![Light theme](https://github.com/SyedWaseem07/ClinicPro-Manage-with-Ease/blob/main/frontend/src/assets/LandingWhite.PNG)
 
-- Home page after user login
-![Home After Login](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/07661302-a165-49cd-b8e5-daeab7ecbc3a)
+- Responsive Design
+![Responsive Design](https://github.com/SyedWaseem07/ClinicPro-Manage-with-Ease/blob/main/frontend/src/assets/fullResp.PNG)
 
-- Authors page
-![Authors](https://github.com/SyedWaseem07/Blogify-Hub/assets/125558233/44ff6337-7e36-4d92-9fb6-83f09769f9ed)
+- Doctor's Home
+![Doctor Home](https://github.com/SyedWaseem07/ClinicPro-Manage-with-Ease/blob/main/frontend/src/assets/doctorHome.PNG)
+
+- All Appointments
+![Appointments](https://github.com/SyedWaseem07/ClinicPro-Manage-with-Ease/blob/main/frontend/src/assets/allAppointment.PNG)
+
+- All Patients
+![patients](https://github.com/SyedWaseem07/ClinicPro-Manage-with-Ease/blob/main/frontend/src/assets/allPatient.PNG)
+
+- Patient Details Page
+![patients](https://github.com/SyedWaseem07/ClinicPro-Manage-with-Ease/blob/main/frontend/src/assets/PatientDet.PNG)
+
+- Profile
+![patients](https://github.com/SyedWaseem07/ClinicPro-Manage-with-Ease/blob/main/frontend/src/assets/Prfile.PNG)
+
+- Add Appointment
+![patients](https://github.com/SyedWaseem07/ClinicPro-Manage-with-Ease/blob/main/frontend/src/assets/addAppointment.PNG)
+
+- Add Patient
+![patients](https://github.com/SyedWaseem07/ClinicPro-Manage-with-Ease/blob/main/frontend/src/assets/addPatient.PNG)
+
+- Search Patient
+![patients](https://github.com/SyedWaseem07/ClinicPro-Manage-with-Ease/blob/main/frontend/src/assets/SearchPatient.PNG)
