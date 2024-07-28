@@ -23,7 +23,9 @@ const HomePage = ({ theme, setTheme, user }) => {
       }
     },
     onSuccess: (data) => {
-      toast.success(`You are now ${data.data.data.role.charAt(0).toUpperCase() + data.data.data.role.substring(1)} of ClinicPro. Click on right side ${data.data.data.role.charAt(0).toUpperCase() + data.data.data.role.substring(1) + "'s Home button to explore"} `)
+      toast.success(`You are now ${data.data.data.role.charAt(0).toUpperCase() + data.data.data.role.substring(1)} of ClinicPro. Click on right side ${data.data.data.role.charAt(0).toUpperCase() + data.data.data.role.substring(1) + "'s Home button to explore"}`, {
+        duration: 3000
+      });
       queryClient.invalidateQueries({ queryKey: ['authUser'] })
     },
     onError: (error) => {

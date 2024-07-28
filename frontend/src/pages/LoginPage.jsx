@@ -22,7 +22,7 @@ const LoginPage = () => {
         const index = error.response.data.indexOf("<pre>")
         const Lastindex = error.response.data.indexOf("<br>")
         const errMsg = error.response.data.substring(index + 5, Lastindex);
-        throw new Error(errMsg);
+        toast.error(errMsg)
       }
     },
     onSuccess: (data) => {
@@ -30,7 +30,7 @@ const LoginPage = () => {
       queryClient.invalidateQueries({ queryKey: ['authUser'] })
     },
     onError: (error) => {
-      toast.error(error.message)
+
     }
   })
 
